@@ -1,0 +1,625 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/common/Header.astro';
+import Footer from '@/components/common/Footer.astro';
+import Container from '@/components/ui/Container.astro';
+import GlassCard from '@/components/ui/GlassCard.astro';
+import Button from '@/components/ui/Button.astro';
+import Picture from '@/components/ui/Picture.astro';
+import siteConfig from '@/site.config';
+import { classifyHref, withBase } from '@/lib/url';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: project,
+  }));
+}
+
+type Props = CollectionEntry<'projects'>;
+
+const project = Astro.props;
+const { Content } = await render(project);
+const description = project.data.description ?? project.data.summary;
+const projectLinks = [
+  project.data.links?.live && {
+    label: 'Visit live site',
+    href: project.data.links.live,
+    external: true,
+  },
+  project.data.links?.github && {
+    label: 'View source',
+    href: project.data.links.github,
+    external: true,
+  },
+  project.data.links?.case && {
+    label: 'Read case study',
+    href: withBase(project.data.links.case),
+    // Unlike the two links above, a case study may live on or off site.
+    external: classifyHref(project.data.links.case) === 'external',
+  },
+].filter((link): link is { label: string; href: string; external: boolean } =>
+  Boolean(link),
+);
+---
+
+<BaseLayout
+  title={project.data.title}
+  description={description}
+  ogImage={withBase(`/og/work/${project.id}.png`)}
+  article={{ type: 'CreativeWork', year: project.data.year }}
+>
+  <Header />
+
+  <main id="main" tabindex="-1">
+    <article>
+      <header class="case-hero">
+        <Container size="xl">
+          <a class="case-hero__back" href={withBase('/work/')}>← All work</a>
+
+          <p class="case-hero__kicker">
+            {project.data.role}{
+              siteConfig.portfolio.showYear && ` / ${project.data.year}`
+            }
+          </p>
+          <h1>{project.data.title}</h1>
+          <p class="case-hero__summary">{project.data.summary}</p>
+
+          <div
+            class="case-hero__image"
+            transition:name={`project-image-${project.id}`}
+          >
+            <Picture
+              src={project.data.cover}
+              alt={project.data.coverAlt ?? project.data.title}
+              widths={[800, 1200, 1600]}
+              sizes="100vw"
+              loading="eager"
+              fetchpriority="high"
+              class="case-cover"
+            />
+          </div>
+        </Container>
+      </header>
+
+      <Container size="xl">
+        <section class="case-facts" aria-label="Project details">
+          <GlassCard padding="md" radius="lg">
+            <dl class="case-facts__list">
+              {
+                project.data.client && (
+                  <div class="case-facts__item">
+                    <dt>Team</dt>
+                    <dd>{project.data.client}</dd>
+                  </div>
+                )
+              }
+              <div class="case-facts__item">
+                <dt>Role</dt>
+                <dd>{project.data.role}</dd>
+              </div>
+              {
+                siteConfig.portfolio.showYear && (
+                  <div class="case-facts__item">
+                    <dt>Year</dt>
+                    <dd>{project.data.year}</dd>
+                  </div>
+                )
+              }
+              {
+                project.data.duration && (
+                  <div class="case-facts__item">
+                    <dt>Duration</dt>
+                    <dd>{project.data.duration}</dd>
+                  </div>
+                )
+              }
+              {
+                siteConfig.portfolio.showTechStack && (
+                  <div class="case-facts__item case-facts__item--stack">
+                    <dt>Tools</dt>
+                    <dd>
+                      <ul>
+                        {project.data.tech.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                )
+              }
+            </dl>
+          </GlassCard>
+        </section>
+
+        <div class="case-content">
+          <p class="case-content__lead">{description}</p>
+          <div class="prose">
+            <Content />
+          </div>
+
+          {
+            projectLinks.length > 0 && (
+              <div class="case-actions" aria-label="Project links">
+                {projectLinks.map((link, index) => (
+                  <Button
+                    href={link.href}
+                    variant={index === 0 ? 'solid' : 'outline'}
+                    external={link.external}
+                  >
+                    {link.label}
+                    <span aria-hidden="true">↗</span>
+                  </Button>
+                ))}
+              </div>
+            )
+          }
+        </div>
+
+        <nav class="case-next" aria-label="Portfolio navigation">
+          <p>End of case file</p>
+          <a href={withBase('/work/')}>
+            Explore all work
+            <span aria-hidden="true">→</span>
+          </a>
+        </nav>
+      </Container>
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* ---------- hero ---------- */
+
+  .case-hero {
+    padding-block: var(--space-xl) var(--space-xl);
+  }
+
+  .case-hero__back {
+    display: inline-flex;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .case-hero__back:hover {
+    color: var(--color-accent);
+  }
+
+  .case-hero__kicker {
+    margin: 0 0 var(--space-md);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .case-hero h1 {
+    max-width: none;
+    margin: 0 0 var(--space-md);
+    font-size: clamp(2.5rem, 4.2vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .case-hero__summary {
+    max-width: 56rem;
+    margin: 0 0 var(--space-xl);
+    color: var(--color-text-muted);
+    font-size: var(--text-xl);
+    line-height: 1.55;
+  }
+
+  .case-hero__image {
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--glass-shadow);
+    background: var(--color-surface);
+  }
+
+  .case-hero__image :global(.case-cover) {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+    object-position: center 55%;
+  }
+
+  /* ---------- facts strip (replaces the old sticky sidebar) ---------- */
+
+  .case-facts {
+    margin-bottom: var(--space-xl);
+  }
+
+  .case-facts__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg) clamp(2rem, 4vw, 4rem);
+    margin: 0;
+  }
+
+  .case-facts__item {
+    min-width: 0;
+  }
+
+  .case-facts__item--stack {
+    flex: 1 1 20rem;
+  }
+
+  .case-facts dt {
+    margin: 0 0 var(--space-xs);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .case-facts dd {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .case-facts ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .case-facts li {
+    margin: 0;
+    padding: 0.2rem var(--space-sm);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--color-surface) 65%, transparent);
+    font-size: var(--text-xs);
+    font-weight: 500;
+  }
+
+  /* ---------- body ---------- */
+
+  .case-content {
+    min-width: 0;
+  }
+
+  .case-content__lead {
+    max-width: 56rem;
+    margin: 0 0 var(--space-lg);
+    padding-left: var(--space-xl);
+    border-left: 2px solid var(--color-accent);
+    font-size: var(--text-xl);
+    line-height: 1.65;
+  }
+
+  /* The theme's global stylesheet caps .prose at ~65ch. Lift that here so
+     layout blocks can use the full width; running text is re-capped below. */
+  .case-content .prose {
+    max-width: none;
+  }
+
+  .prose :global(h2) {
+    margin: var(--space-2xl) 0 var(--space-md);
+    font-size: var(--text-3xl);
+    letter-spacing: -0.025em;
+  }
+
+  .prose :global(h3) {
+    margin: var(--space-2xl) 0 var(--space-md);
+    font-size: var(--text-xl);
+  }
+
+  .prose :global(p),
+  .prose :global(li) {
+    color: var(--color-text);
+    font-size: var(--text-lg);
+    line-height: 1.7;
+  }
+
+  .prose :global(ul) {
+    margin: 0 0 var(--space-lg);
+    padding-left: 1.25rem;
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-xs);
+  }
+
+  .prose :global(li::marker) {
+    color: var(--color-accent);
+  }
+
+  .prose :global(p) {
+    margin: 0 0 var(--space-lg);
+  }
+
+  .prose :global(strong),
+  .prose :global(b) {
+    color: var(--color-text);
+  }
+
+  .prose :global(.eyebrow) {
+    margin: 0 0 var(--space-sm);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* figures: every image links to its full-size file */
+  .prose :global(.fig) {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .prose :global(.fig a) {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    transition: border-color 0.2s ease;
+  }
+
+  .prose :global(.fig a:hover) {
+    border-color: var(--color-accent);
+  }
+
+  .prose :global(.fig img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .prose :global(figcaption) {
+    margin-top: var(--space-sm);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+
+  .prose :global(video) {
+    display: block;
+    width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  /* text beside an image */
+  .prose :global(.split) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
+    margin: var(--space-md) 0 var(--space-xl);
+  }
+
+  .prose :global(.split--text) {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  }
+
+  .prose :global(.split--media) {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .prose :global(.split--top) {
+    align-items: start;
+  }
+
+  .prose :global(.split > div > :last-child) {
+    margin-bottom: 0;
+  }
+
+  /* comparison laid out like a table without being one: each column is a
+     variant, and subgrid lines up image / text / sim / sim text across columns */
+  .prose :global(.compare) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(4, auto);
+    column-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    row-gap: var(--space-md);
+    margin: var(--space-md) 0 var(--space-lg);
+  }
+
+  .prose :global(.compare__col) {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    min-width: 0;
+  }
+
+  .prose :global(.compare__col p) {
+    margin: 0;
+  }
+
+  .prose :global(.compare__name) {
+    margin-bottom: var(--space-xs) !important;
+    color: var(--color-text);
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .prose :global(.compare__sim) {
+    line-height: 1.6;
+  }
+
+  .prose :global(.compare__col--chosen .fig a) {
+    border-color: var(--color-accent);
+  }
+
+  .prose :global(.compare__name[data-badge]::after) {
+    content: attr(data-badge);
+    margin-left: var(--space-sm);
+    padding: 0.1rem var(--space-sm);
+    border-radius: var(--radius-full);
+    background: var(--color-accent-glass);
+    color: var(--color-accent-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .prose :global(.decision) {
+    margin: 0 0 var(--space-xl);
+    padding: var(--space-lg) var(--space-xl);
+    border-left: 2px solid var(--color-accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    background: var(--color-accent-glass);
+  }
+
+  .prose :global(.decision p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .prose :global(.grid3) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    align-items: start;
+    margin: var(--space-md) 0 var(--space-xl);
+  }
+
+  /* bordered text cards, two across */
+  .prose :global(.cards) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-md) 0 var(--space-xl);
+  }
+
+  .prose :global(.cards > div) {
+    padding: var(--space-lg) var(--space-xl);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    background: var(--glass-bg);
+  }
+
+  .prose :global(.cards p),
+  .prose :global(.cards ul),
+  .prose :global(.compare__col ul) {
+    margin: 0;
+  }
+
+  .prose :global(.split > div > .fig) {
+    margin-top: var(--space-lg);
+  }
+
+  .prose :global(.cards .cards__title) {
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+    font-weight: 700;
+  }
+
+  .prose :global(.stats) {
+    display: grid;
+    gap: var(--space-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .prose :global(.stats--row) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: var(--space-lg);
+  }
+
+  .prose :global(.stats li) {
+    padding-left: var(--space-lg);
+    border-left: 2px solid var(--color-accent);
+    line-height: 1.55;
+  }
+
+  .prose :global(.stats b) {
+    display: block;
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+  }
+
+  /* ---------- footer nav ---------- */
+
+  .case-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-3xl);
+  }
+
+  .case-next {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    margin-top: var(--space-3xl);
+    padding-block: var(--space-xl);
+    border-block: 1px solid var(--glass-border);
+  }
+
+  .case-next p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .case-next a {
+    display: inline-flex;
+    gap: var(--space-md);
+    align-items: center;
+    color: var(--color-text);
+    font-size: var(--text-xl);
+    font-weight: 700;
+  }
+
+  .case-next a span {
+    color: var(--color-accent);
+  }
+
+  /* ---------- narrow screens ---------- */
+
+  @media (max-width: 900px) {
+    .prose :global(.split),
+    .prose :global(.split--text),
+    .prose :global(.split--media),
+    .prose :global(.grid3),
+    .prose :global(.cards),
+    .prose :global(.stats--row) {
+      grid-template-columns: 1fr;
+    }
+
+    .prose :global(.compare) {
+      grid-template-columns: 1fr;
+      grid-template-rows: none;
+      row-gap: var(--space-2xl);
+    }
+
+    .prose :global(.compare__col) {
+      grid-row: auto;
+      grid-template-rows: none;
+      row-gap: var(--space-md);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .case-next {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
