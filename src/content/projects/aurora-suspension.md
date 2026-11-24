@@ -183,15 +183,25 @@ I designed three variants, all with an asymmetric rod-end attachment to match re
 
 ## It worked
 
-<div class="split split--media">
-<ul class="stats">
+<ul class="stats stats--row">
 <li><b>~15.5 s</b>Both sides, every driver, consistently. The limit is 16 s.</li>
 <li><b>17 s to 15 s</b>Best time before and after the redesign.</li>
 <li><b>First attempt</b>Passed the figure-eight at race with every driver, plus slalom.</li>
 </ul>
+
+<div class="split">
+<figure class="fig">
 <video controls preload="metadata" poster="/video/aurora-figure8-poster.jpg">
 <source src="/video/aurora-figure8.mp4" type="video/mp4" />
 </video>
+<figcaption>Figure-eight.</figcaption>
+</figure>
+<figure class="fig">
+<video controls preload="metadata" poster="/video/aurora-slalom-poster.jpg">
+<source src="/video/aurora-slalom.mp4" type="video/mp4" />
+</video>
+<figcaption>Slalom.</figcaption>
+</figure>
 </div>
 
 ## What I'd do differently
