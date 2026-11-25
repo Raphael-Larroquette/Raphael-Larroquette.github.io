@@ -3,20 +3,15 @@ title: '3DEXPERIENCE PLM Setup'
 summary: "Restructured the team's CAD data platform with access control, approval workflows and standard libraries, so parts can't be accidentally broken and only approved designs reach manufacturing."
 description: "Set up Blue Sky Solar Racing's 3DEXPERIENCE platform for Gen13: who can edit what, how designs get approved, and how parts are tagged, reused and drawn."
 cover: '../../assets/images/projects/3dx-plm-cover.png'
-coverAlt: 'Placeholder cover image for the 3DEXPERIENCE PLM setup'
+coverAlt: 'The 3DEXPERIENCE logo'
 tech:
   - '3DEXPERIENCE'
   - 'CATIA'
   - 'ENOVIA'
-role: 'TODO: confirm role wording'
+role: ''
 year: 2026
 client: 'Blue Sky Solar Racing (Gen13)'
-duration: 'TODO: timeline'
 ---
-
-<figure class="fig">
-<div class="slot"><b>IMG-01 · dashboard.png</b>Gen13 Mech dashboard (edited version: teammate names and URLs removed)</div>
-</figure>
 
 ## Before and after
 
@@ -110,8 +105,6 @@ duration: 'TODO: timeline'
 
 ## Custom attributes
 
-<div class="split split--text">
-<div>
 <ul>
 <li>Mandatory tags on every part: subsystem, manufacturing method, subteam, handedness</li>
 <li>Optional tags: mass, cost, manufacturer, part number</li>
@@ -123,11 +116,6 @@ duration: 'TODO: timeline'
 </ul>
 </li>
 </ul>
-</div>
-<figure class="fig">
-<div class="slot"><b>IMG-04 · optional</b>Attribute panel on a part</div>
-</figure>
-</div>
 
 ## Standard parts library
 

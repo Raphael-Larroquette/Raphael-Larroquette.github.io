@@ -2,8 +2,9 @@
 title: 'Suspension Design & Optimization Tool'
 summary: 'Python tool that solves kinematics, forces and joint misalignment for 3-wheeled solar cars, and optimizes the geometry toward efficiency targets.'
 description: "Developed a suspension solving and optimization tool for Blue Sky Solar Racing's 3-wheeled Gen13 solar car, covering kinematics, steady-state forces, bearing misalignment, and multi-objective geometry optimization."
-cover: '../../assets/images/projects/suspension-optimizer-cover.png'
-coverAlt: 'Placeholder cover image for the suspension design and optimization tool'
+cover: '../../assets/images/projects/suspension-optimizer-cover.jpg'
+showCover: false
+coverAlt: 'First frame of the suspension sweep: front, side, top and isometric views of the Gen13 linkage'
 tech:
   - 'Python'
   - 'pymoo (NSGA-III)'
@@ -31,7 +32,6 @@ links:
 <ul class="stats stats--row">
 <li><b>~12 s</b>To analyze a candidate design (previously 1 to 2 hours)</li>
 <li><b>1064 → 960 mm</b>Track width, through faster iteration with the whole team</li>
-<li><b>54% → TODO%</b>Ackermann, Aurora vs Gen13 (target 100%)</li>
 </ul>
 
 ## Problem
@@ -75,15 +75,12 @@ links:
 <li>Reports camber, toe, KPI, caster, trail, scrub, bump steer, bump scrub, roll centre, instant centres, Ackermann and motion ratio</li>
 <li>Multi-core batch runner produces a cross-sweep report for every candidate</li>
 </ul>
-<div class="slot slot--small"><b>IMG-02 · cores.png</b>64 cores maxed</div>
 </div>
 <figure class="fig">
 <a href="/images/projects/suspension-optimizer/bump-plots.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/bump-plots.png" alt="Bump sweep plots: camber, caster, toe, scrub radius, trail, half track, damper length, motion ratio, installation ratio, roll-centre height, track change, steering ratio and camber gain against left wheel travel" loading="lazy" /></a>
 </figure>
 </div>
 
-<div class="split split--text">
-<div>
 <h3>3. Joint misalignment analysis</h3>
 <ul>
 <li>Aurora's rod ends broke because misalignment wasn't considered from the start of design. Therefore I:
@@ -93,11 +90,6 @@ links:
 </ul>
 </li>
 </ul>
-</div>
-<figure class="fig">
-<div class="slot"><b>IMG-03 · aurora-rod-end.jpg</b>Broken Aurora rod end</div>
-</figure>
-</div>
 
 <figure class="fig">
 <a href="/images/projects/suspension-optimizer/alignment.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/alignment.png" alt="Table of required and best-available misalignment angle per joint, naming the sweep step that sets each maximum" loading="lazy" /></a>
@@ -149,9 +141,6 @@ links:
 </div>
 <figcaption>NSGA-III (pymoo), 5 objectives, 21 hardpoint parameters.</figcaption>
 </figure>
-<figure class="fig">
-<div class="slot"><b>IMG-10 · evolution.gif</b>Optimizer convergence (optional)</div>
-</figure>
 </div>
 </div>
 
@@ -192,29 +181,6 @@ links:
 ## Outcome
 
 <div class="split split--text">
-<figure class="fig">
-<div class="table-wrap">
-<table>
-<thead>
-<tr><th>Characteristic</th><th>Aurora</th><th>Gen13</th><th>Target</th></tr>
-</thead>
-<tbody>
-<tr><td>Ackermann</td><td>54%</td><td>TODO</td><td>100%</td></tr>
-<tr><td>Track change over travel (bump scrub)</td><td>14 mm</td><td>TODO</td><td>0 mm</td></tr>
-<tr><td>Bump steer over travel</td><td>0.025°</td><td>TODO</td><td>0°</td></tr>
-<tr><td>Outer-wheel road camber in turn</td><td>5.27°</td><td>TODO</td><td>~0°</td></tr>
-<tr><td>Max joint force (excl. dampers)</td><td>TODO (Raphael confirming the source model)</td><td>TODO</td><td>Minimize</td></tr>
-<tr><td>Vehicle mass</td><td>294.5 kg</td><td>TODO</td><td>n/a</td></tr>
-</tbody>
-</table>
-</div>
-<figcaption>Same load cases applied to both cars.</figcaption>
-</figure>
-<figure class="fig">
-<a href="/images/projects/suspension-optimizer/catia-wireframe.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/catia-wireframe.png" alt="Gen13 front suspension wireframe in CATIA" loading="lazy" /></a>
-</figure>
-</div>
-
 <div class="decision">
 <ul>
 <li>Candidate analysis cut from 1 to 2 hours to ~12 seconds</li>
@@ -222,6 +188,10 @@ links:
 <li>Designed out Aurora's rod-end failure mode: misalignment limits were set from the first sketch, not discovered after a failure</li>
 <li>Built for reuse: one-command runs, no hidden defaults, and docs written for future team members</li>
 </ul>
+</div>
+<figure class="fig">
+<a href="/images/projects/suspension-optimizer/catia-wireframe.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/catia-wireframe.png" alt="Gen13 front suspension wireframe in CATIA" loading="lazy" /></a>
+</figure>
 </div>
 
 <p class="attrib">Built on <a href="https://github.com/suspension-explorer/suspension-explorer-core" target="_blank" rel="noopener noreferrer">suspension-explorer-core</a>. Code written with an AI coding assistant (Claude) under my direction. I set the requirements and architecture, made the engineering decisions, and reviewed and validated the results.</p>

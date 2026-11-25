@@ -101,14 +101,18 @@ const contactLinks = [
           <Button href="#projects" variant="solid" size="lg"
             >View Projects</Button
           >
-          <Button
-            href={withBase(RESUME)}
-            variant="outline"
-            size="lg"
-            download="Raphael_Larroquette_Resume.pdf"
-          >
-            Download Resume
-          </Button>
+          {
+            resumeExists && (
+              <Button
+                href={withBase(RESUME)}
+                variant="outline"
+                size="lg"
+                download="Raphael_Larroquette_Resume.pdf"
+              >
+                Download Resume
+              </Button>
+            )
+          }
         </div>
       </Container>
     </section>
@@ -167,35 +171,31 @@ const contactLinks = [
 
     <section class="home-section" id="contact">
       <Container size="xl">
-        <div class="contact">
-          <div class="resume">
-            <h2>Resume</h2>
-            <a
-              class="resume__file"
-              href={withBase(RESUME)}
-              download="Raphael_Larroquette_Resume.pdf"
-            >
-              <span class="resume__icon" set:html={icons.pdf} />
-              <span>Raphael_Larroquette_Resume.pdf</span>
-            </a>
-            <div>
-              <Button
-                href={withBase(RESUME)}
-                variant="solid"
-                download="Raphael_Larroquette_Resume.pdf"
-              >
-                Download Resume
-              </Button>
-            </div>
-            {
-              !resumeExists && (
-                <p class="todo">
-                  TODO: add the PDF at
-                  public/resume/Raphael_Larroquette_Resume.pdf
-                </p>
-              )
-            }
-          </div>
+        <div class:list={['contact', { 'contact--solo': !resumeExists }]}>
+          {
+            resumeExists && (
+              <div class="resume">
+                <h2>Resume</h2>
+                <a
+                  class="resume__file"
+                  href={withBase(RESUME)}
+                  download="Raphael_Larroquette_Resume.pdf"
+                >
+                  <span class="resume__icon" set:html={icons.pdf} />
+                  <span>Raphael_Larroquette_Resume.pdf</span>
+                </a>
+                <div>
+                  <Button
+                    href={withBase(RESUME)}
+                    variant="solid"
+                    download="Raphael_Larroquette_Resume.pdf"
+                  >
+                    Download Resume
+                  </Button>
+                </div>
+              </div>
+            )
+          }
 
           <div class="connect">
             <h2>Let's connect</h2>
@@ -352,6 +352,10 @@ const contactLinks = [
     align-items: start;
   }
 
+  .contact--solo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .resume {
     display: grid;
     gap: var(--space-lg);
@@ -417,13 +421,6 @@ const contactLinks = [
     font-size: var(--text-xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-
-  .todo {
-    margin: 0;
-    color: var(--color-accent);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
   }
 
   @media (max-width: 1000px) {

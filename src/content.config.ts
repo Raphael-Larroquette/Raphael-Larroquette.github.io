@@ -80,6 +80,9 @@ const projects = defineCollection({
       featured: z.boolean().default(false),
       // Drafts are hidden from production builds but visible in `npm run dev`.
       draft: z.boolean().default(false),
+      // Set false when a page opens with its own hero media and the cover
+      // would just repeat it. The cover still shows on cards.
+      showCover: z.boolean().default(true),
       links: z
         .object({
           live: z.url().optional(),

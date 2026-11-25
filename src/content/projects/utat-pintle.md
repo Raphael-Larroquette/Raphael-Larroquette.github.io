@@ -12,7 +12,7 @@ tech:
 role: 'Pintle design co-lead'
 year: 2025
 client: 'UofT Aerospace Team (Liquid Propulsion)'
-duration: 'Oct 2025 to TODO: end date'
+duration: 'From Oct 2025'
 ---
 
 <div class="split split--text">
@@ -28,8 +28,6 @@ duration: 'Oct 2025 to TODO: end date'
 
 ## Problem
 
-<div class="split split--text">
-<div>
 <ul>
 <li>The previous pintle wasn't throttleable, so it didn't use a pintle's main advantage</li>
 <li>Its flow rates were poorly predicted:
@@ -40,12 +38,6 @@ duration: 'Oct 2025 to TODO: end date'
 </li>
 <li>Uneven propellant distribution and the excess oxidizer caused local overheating. The injector melted at two points around the liner groove</li>
 </ul>
-</div>
-<figure class="fig">
-<div class="slot"><b>IMG-07 · damaged injector</b>Previous injector after the HF-FETT1 hot fire (publish only with the team's OK)</div>
-<figcaption>Previous injector after the HF-FETT1 hot fire. Source: UTAT Rocketry test report.</figcaption>
-</figure>
-</div>
 
 ## Goal
 
@@ -92,7 +84,6 @@ duration: 'Oct 2025 to TODO: end date'
 <ul>
 <li>Rebuilt the spreadsheet model as a Python app that accepts multiple orifice geometries</li>
 <li>Designs are easy to change, compare and share with the team</li>
-<li>TODO: repo link, if the tool is public</li>
 </ul>
 </div>
 </div>

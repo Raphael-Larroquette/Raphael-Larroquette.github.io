@@ -62,27 +62,36 @@ const projectLinks = [
           <a class="case-hero__back" href={withBase('/work/')}>← All work</a>
 
           <p class="case-hero__kicker">
-            {project.data.role}{
-              siteConfig.portfolio.showYear && ` / ${project.data.year}`
+            {
+              [
+                project.data.role,
+                siteConfig.portfolio.showYear && project.data.year,
+              ]
+                .filter(Boolean)
+                .join(' / ')
             }
           </p>
           <h1>{project.data.title}</h1>
           <p class="case-hero__summary">{project.data.summary}</p>
 
-          <div
-            class="case-hero__image"
-            transition:name={`project-image-${project.id}`}
-          >
-            <Picture
-              src={project.data.cover}
-              alt={project.data.coverAlt ?? project.data.title}
-              widths={[800, 1200, 1600]}
-              sizes="100vw"
-              loading="eager"
-              fetchpriority="high"
-              class="case-cover"
-            />
-          </div>
+          {
+            project.data.showCover && (
+              <div
+                class="case-hero__image"
+                transition:name={`project-image-${project.id}`}
+              >
+                <Picture
+                  src={project.data.cover}
+                  alt={project.data.coverAlt ?? project.data.title}
+                  widths={[800, 1200, 1600]}
+                  sizes="100vw"
+                  loading="eager"
+                  fetchpriority="high"
+                  class="case-cover"
+                />
+              </div>
+            )
+          }
         </Container>
       </header>
 
@@ -98,10 +107,14 @@ const projectLinks = [
                   </div>
                 )
               }
-              <div class="case-facts__item">
-                <dt>Role</dt>
-                <dd>{project.data.role}</dd>
-              </div>
+              {
+                project.data.role && (
+                  <div class="case-facts__item">
+                    <dt>Role</dt>
+                    <dd>{project.data.role}</dd>
+                  </div>
+                )
+              }
               {
                 siteConfig.portfolio.showYear && (
                   <div class="case-facts__item">
