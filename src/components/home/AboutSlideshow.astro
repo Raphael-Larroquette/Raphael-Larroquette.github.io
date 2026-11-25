@@ -1,0 +1,338 @@
+---
+// Plain CSS/JS crossfade slideshow. Slides whose file doesn't exist yet render
+// a labelled placeholder, so the layout can be reviewed before photos arrive.
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { withBase } from '@/lib/url';
+
+// Photos live in public/images/home/about-1 ... about-5 (any extension).
+// The frame is a fixed 4:3 (four of the five photos are landscape), so
+// object-position keeps the subject in frame where a photo is cropped.
+const dir = join(process.cwd(), 'public', 'images', 'home');
+const files = readdirSync(dir);
+
+const data = [
+  {
+    caption:
+      'Lecturing new Blue Sky Solar Racing recruits on our GD&T, DFA and DFM standards',
+    alt: 'Lecturing new Blue Sky Solar Racing recruits on our GD&T, DFA and DFM standards',
+    position: '45% 50%',
+  },
+  {
+    caption: 'Near the summit of Huayna Potosí, on a 3-day climb',
+    alt: 'Near the summit of Huayna Potosí, on a 3-day climb',
+    // Portrait photo: keep the face and the hut, drop the empty sky.
+    position: '50% 80%',
+  },
+  {
+    caption: 'Working at MCML during my 4-month stint as a student researcher',
+    alt: "Working at MCML during Raphael's 4-month stint as a student researcher",
+    position: '50% 50%',
+  },
+  {
+    caption: 'Pushing our solar car, Aurora, into scrutineering at FSGP 2026',
+    alt: 'Pushing our solar car, Aurora, into scrutineering at FSGP 2026',
+    position: '50% 50%',
+  },
+  {
+    caption: 'Snowboarding with friends in Montreal',
+    alt: 'Snowboarding with friends in Montreal',
+    position: '50% 50%',
+  },
+];
+
+const slides = data.map((d, i) => {
+  const n = i + 1;
+  const file = files.find((f) => f.startsWith(`about-${n}.`));
+  return { n, ...d, src: file ? `/images/home/${file}` : undefined };
+});
+---
+
+<div
+  class="slideshow"
+  role="group"
+  aria-roledescription="carousel"
+  aria-label="Photos of Raphael's work"
+  data-slideshow
+>
+  <div class="slideshow__viewport" aria-live="off">
+    {
+      slides.map((slide, i) => (
+        <figure
+          class:list={['slide', { 'is-active': i === 0 }]}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${slide.n} of ${slides.length}`}
+          aria-hidden={i === 0 ? 'false' : 'true'}
+        >
+          {slide.src ? (
+            <img
+              src={withBase(slide.src)}
+              alt={slide.alt}
+              style={`object-position: ${slide.position}`}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          ) : (
+            <div class="slide__placeholder" role="img" aria-label={slide.alt}>
+              <b>about-{slide.n}</b>
+              <span>Photo placeholder</span>
+            </div>
+          )}
+          <figcaption>{slide.caption}</figcaption>
+        </figure>
+      ))
+    }
+    <button
+      class="slideshow__arrow slideshow__arrow--prev"
+      type="button"
+      aria-label="Previous photo"
+      data-prev>←</button
+    >
+    <button
+      class="slideshow__arrow slideshow__arrow--next"
+      type="button"
+      aria-label="Next photo"
+      data-next>→</button
+    >
+  </div>
+  <div class="slideshow__dots">
+    {
+      slides.map((slide, i) => (
+        <button
+          type="button"
+          class:list={['dot', { 'is-active': i === 0 }]}
+          aria-label={`Show photo ${slide.n}`}
+          aria-current={i === 0 ? 'true' : undefined}
+          data-dot={i}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .slideshow {
+    display: grid;
+    gap: var(--space-md);
+    min-width: 0;
+  }
+
+  .slideshow:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Fixed 4:3 so photos of any size never move the layout. */
+  .slideshow__viewport {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 700ms ease,
+      visibility 0s linear 700ms;
+  }
+
+  .slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 700ms ease;
+  }
+
+  .slide img,
+  .slide__placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .slide img {
+    display: block;
+    object-fit: cover;
+  }
+
+  .slide__placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--color-accent);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .slide__placeholder b {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+  }
+
+  .slide figcaption {
+    position: absolute;
+    inset: auto 0 0;
+    padding: var(--space-lg) var(--space-md) var(--space-sm);
+    background: linear-gradient(transparent, rgba(8, 10, 18, 0.78));
+    color: #fff;
+    font-size: var(--text-sm);
+  }
+
+  .slideshow__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    aspect-ratio: 1;
+    transform: translateY(-50%);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 50%;
+    background: rgba(12, 14, 24, 0.72);
+    color: #fff;
+    font-size: var(--text-lg);
+    cursor: pointer;
+  }
+
+  .slideshow__arrow--prev {
+    left: var(--space-sm);
+  }
+  .slideshow__arrow--next {
+    right: var(--space-sm);
+  }
+
+  .slideshow__arrow:hover {
+    border-color: var(--color-accent);
+  }
+
+  .slideshow__arrow:focus-visible,
+  .dot:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .slideshow__dots {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+  }
+
+  .dot {
+    width: 0.65rem;
+    height: 0.65rem;
+    padding: 0;
+    border: 1px solid var(--color-accent);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .dot.is-active {
+    background: var(--color-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide,
+    .slide.is-active {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from '@/lib/lifecycle';
+
+  const INTERVAL_MS = 5000;
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-slideshow]');
+    if (!root) return;
+
+    const slides = [...root.querySelectorAll<HTMLElement>('.slide')];
+    const dots = [...root.querySelectorAll<HTMLElement>('[data-dot]')];
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let current = 0;
+    let timer: number | undefined;
+    let paused = false;
+
+    function show(i: number) {
+      current = (i + slides.length) % slides.length;
+      slides.forEach((s, idx) => {
+        const on = idx === current;
+        s.classList.toggle('is-active', on);
+        s.setAttribute('aria-hidden', on ? 'false' : 'true');
+      });
+      dots.forEach((d, idx) => {
+        const on = idx === current;
+        d.classList.toggle('is-active', on);
+        if (on) d.setAttribute('aria-current', 'true');
+        else d.removeAttribute('aria-current');
+      });
+    }
+
+    function stop() {
+      window.clearInterval(timer);
+      timer = undefined;
+    }
+
+    function start() {
+      stop();
+      // Reduced motion: no auto-advance, manual controls only.
+      if (reduced.matches || paused) return;
+      timer = window.setInterval(() => {
+        // The page was swapped out by client-side navigation: stop ticking.
+        if (!root!.isConnected) return stop();
+        show(current + 1);
+      }, INTERVAL_MS);
+    }
+
+    function pause() {
+      paused = true;
+      stop();
+    }
+    function resume() {
+      paused = false;
+      start();
+    }
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => {
+      show(current - 1);
+      start();
+    });
+    root.querySelector('[data-next]')?.addEventListener('click', () => {
+      show(current + 1);
+      start();
+    });
+    dots.forEach((d) =>
+      d.addEventListener('click', () => {
+        show(Number(d.dataset.dot));
+        start();
+      }),
+    );
+
+    root.addEventListener('mouseenter', pause);
+    root.addEventListener('mouseleave', resume);
+    root.addEventListener('focusin', pause);
+    root.addEventListener('focusout', resume);
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+
+    start();
+  }
+
+  onPage(setup);
+</script>

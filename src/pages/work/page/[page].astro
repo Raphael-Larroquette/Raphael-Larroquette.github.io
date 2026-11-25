@@ -1,6 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
+import { getProjects } from '@/lib/projects';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Header from '@/components/common/Header.astro';
@@ -9,7 +9,7 @@ import WorkArchive from '@/components/portfolio/WorkArchive.astro';
 import siteConfig from '@/site.config';
 
 export const getStaticPaths = (async () => {
-  const projects = (await getCollection('projects')).sort((a, b) => {
+  const projects = (await getProjects()).sort((a, b) => {
     if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
     return b.data.year - a.data.year;
   });

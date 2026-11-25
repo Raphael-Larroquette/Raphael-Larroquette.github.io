@@ -4,3 +4,7 @@ package-lock.json
 .astro
 public/pagefind
 .claude
+
+# handoff docs are prose, not code
+CLAUDE.md
+SITE-GUIDE.md

@@ -78,6 +78,8 @@ const projects = defineCollection({
         .min(1000, { message: 'Must be a four-digit year' })
         .max(9999, { message: 'Must be a four-digit year' }),
       featured: z.boolean().default(false),
+      // Drafts are hidden from production builds but visible in `npm run dev`.
+      draft: z.boolean().default(false),
       links: z
         .object({
           live: z.url().optional(),

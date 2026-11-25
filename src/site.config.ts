@@ -96,9 +96,9 @@ const siteConfig: SiteConfig = {
 
   nav: {
     main: [
-      { name: 'Home', href: '/' },
-      { name: 'Projects', href: '/work/' },
-      { name: 'About', href: '/about/' },
+      { name: 'About', href: '/#about' },
+      { name: 'Projects', href: '/#projects' },
+      { name: 'Contact', href: '/#contact' },
     ],
   },
 

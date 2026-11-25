@@ -56,7 +56,8 @@ Routing is file based: `src/content/projects/aurora-suspension.md` becomes `/wor
 ### Frontmatter
 
 - Required: `title`, `summary`, `cover`, `tech`, `role`, `year`
-- Optional: `description`, `coverAlt`, `featured`, `client`, `duration`, `links`
+- Optional: `description`, `coverAlt`, `featured`, `draft`, `client`, `duration`, `links`
+- `draft: true` hides a project from production builds (homepage, /work/, its page, its social card) but not from `npm run dev`. Always read projects through `getProjects()` in `src/lib/projects.ts`, never `getCollection('projects')`
 - `summary` is the card text and hero subtitle. `description` is the lead line with the accent bar
 - `client` renders as **Team**, `tech` renders as **Tools**
 - `featured: true` puts a project on the home page. `/work/` lists everything, including smaller second-tier projects
@@ -99,8 +100,11 @@ ffmpeg -ss 15 -i in.mov -frames:v 1 -vf scale=1280:-2 -q:v 4 out-poster.jpg
 
 - `--container-max` widened from 80rem to 96rem (`tokens.css`)
 - Project template: sticky sidebar replaced by a horizontal facts strip; theme gallery removed; theme's global `.prose` 65ch cap lifted on project pages; one-line title; body text white and larger; layout blocks added
-- `site.config.ts`: blog, landing, RSS and search off; nav is Home / Projects / About; dark mode by default
+- `site.config.ts`: blog, landing, RSS and search off; nav is About / Projects / Contact (anchors on the single-scroll homepage); dark mode by default
 - Colours: viridian accent (`hsl(165, 62%, 55%)` dark, `hsl(165, 65%, 34%)` light) and a blue/green aurora background
+
+- Theme leftovers are hidden, not deleted: `src/pages/_about.astro`, `_blog/`, `_tags/` and `_rss.xml.ts`. The leading underscore stops Astro routing them. Rename to bring one back
+- Open Graph card for the homepage (`/og-image.png`) is still the theme art. Needs a real one
 
 ## Gotchas
 
@@ -115,6 +119,7 @@ ffmpeg -ss 15 -i in.mov -frames:v 1 -vf scale=1280:-2 -q:v 4 out-poster.jpg
 **Done**
 
 - Aurora Suspension & Steering Redesign (`aurora-suspension.md`). Use it as the reference for every other project page
+- Suspension optimizer, 3DEXPERIENCE PLM and pintle pages built from specs, with some images and TODOs still open. Homepage is a single scroll (hero, who am I with slideshow, projects grid, resume + contact)
 
 **Next**
 

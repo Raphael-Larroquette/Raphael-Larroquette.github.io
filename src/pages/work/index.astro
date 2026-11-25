@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
+import { getProjects } from '@/lib/projects';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Header from '@/components/common/Header.astro';
 import Footer from '@/components/common/Footer.astro';
 import WorkArchive from '@/components/portfolio/WorkArchive.astro';
 import siteConfig from '@/site.config';
 
-const allProjects = (await getCollection('projects')).sort((a, b) => {
+const allProjects = (await getProjects()).sort((a, b) => {
   if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
   return b.data.year - a.data.year;
 });
