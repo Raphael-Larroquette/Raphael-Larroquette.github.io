@@ -18,7 +18,7 @@ client: 'Blue Sky Solar Racing'
 duration: 'Jan - May 2026'
 ---
 
-<div class="split split--text split--center">
+<div class="split split--text">
 <div>
 <ul>
 <li>This was the team's first three-wheeled car</li>
@@ -78,7 +78,7 @@ I built a fully functional front suspension assembly in CATIA Assembly Design so
 
 ## Wireframe
 
-<div class="split split--text split--center">
+<div class="split split--text">
 <div>
 <ul>
 <li>Built from first principles: front view geometry and Ackermann calculations</li>

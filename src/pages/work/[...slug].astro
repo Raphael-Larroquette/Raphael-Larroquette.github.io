@@ -32,9 +32,10 @@ const projectLinks = [
     external: true,
   },
   project.data.links?.github && {
-    label: 'View source',
+    label: 'See it on GitHub',
     href: project.data.links.github,
     external: true,
+    github: true,
   },
   project.data.links?.case && {
     label: 'Read case study',
@@ -42,9 +43,20 @@ const projectLinks = [
     // Unlike the two links above, a case study may live on or off site.
     external: classifyHref(project.data.links.case) === 'external',
   },
-].filter((link): link is { label: string; href: string; external: boolean } =>
-  Boolean(link),
+].filter(
+  (
+    link,
+  ): link is {
+    label: string;
+    href: string;
+    external: boolean;
+    github?: boolean;
+  } => Boolean(link),
 );
+
+// GitHub mark (octicon mark-github, MIT), for the "See it on GitHub" button
+const GITHUB_ICON =
+  '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
 ---
 
 <BaseLayout
@@ -59,7 +71,9 @@ const projectLinks = [
     <article>
       <header class="case-hero">
         <Container size="xl">
-          <a class="case-hero__back" href={withBase('/work/')}>← All work</a>
+          <a class="case-hero__back" href={withBase('/#projects')}
+            >← All projects</a
+          >
 
           <p class="case-hero__kicker">
             {
@@ -155,31 +169,39 @@ const projectLinks = [
             <Content />
           </div>
 
-          <div class="case-actions" aria-label="Project links">
-            {projectLinks.map((link, index) => (
-              <Button
-                href={link.href}
-                variant={index === 0 ? 'solid' : 'outline'}
-                external={link.external}
-              >
-                {link.label}
-                <span aria-hidden="true">↗</span>
-              </Button>
-            ))}
-            {/* generated at deploy time by scripts/build-pdf.mjs */}
-            <Button
-              href={withBase('/Raphael_Larroquette_Portfolio.pdf')}
-              variant="outline"
-              download="Raphael_Larroquette_Portfolio.pdf"
-            >
-              Download Portfolio (PDF)
-            </Button>
-          </div>
+          {
+            projectLinks.length > 0 && (
+              <div class="case-actions" aria-label="Project links">
+                {projectLinks.map((link, index) =>
+                  link.github ? (
+                    <a
+                      class="gh-button"
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Fragment set:html={GITHUB_ICON} />
+                      {link.label}
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  ) : (
+                    <Button
+                      href={link.href}
+                      variant={index === 0 ? 'solid' : 'outline'}
+                      external={link.external}
+                    >
+                      {link.label}
+                      <span aria-hidden="true">↗</span>
+                    </Button>
+                  ),
+                )}
+              </div>
+            )
+          }
         </div>
 
         <nav class="case-next" aria-label="Portfolio navigation">
-          <p>End of case file</p>
-          <a href={withBase('/work/')}>
+          <a href={withBase('/#projects')}>
             Explore all work
             <span aria-hidden="true">→</span>
           </a>
@@ -443,6 +465,46 @@ const projectLinks = [
     align-items: start;
   }
 
+  /* image on the left, text on the right, keeping the column widths of the
+     base / --text / --media variant. Markup order stays text then image, so
+     the stacked mobile order is unchanged */
+  .prose :global(.split--rev > :first-child) {
+    order: 2;
+  }
+
+  .prose :global(.split--rev) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .prose :global(.split--rev.split--text) {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .prose :global(.split--rev.split--media) {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  }
+
+  /* two text sections side by side (e.g. Problem | Goal) */
+  .prose :global(.split--pair h2) {
+    margin-top: 0;
+  }
+
+  /* numbered "How I did it" steps: one even rhythm between steps */
+  .prose :global(.split--step) {
+    margin: 0;
+    padding-block: var(--space-xl);
+  }
+
+  .prose :global(.split--step + .split--step) {
+    border-top: 1px solid var(--glass-border);
+  }
+
+  /* a wordmark shouldn't fill a whole column */
+  .prose :global(.fig--logo) {
+    justify-self: center;
+    width: min(100%, 26rem);
+  }
+
   /* short text beside a taller image: centre the text against it */
   .prose :global(.split--center) {
     align-items: center;
@@ -663,6 +725,17 @@ const projectLinks = [
     margin: var(--space-md) 0 var(--space-lg);
   }
 
+  .prose :global(.fig .table-wrap) {
+    margin: 0;
+  }
+
+  /* the theme makes tables display: block (for scrolling), which shrinks them
+     to their content; .table-wrap already scrolls, so let the table fill it */
+  .prose :global(.table-wrap table) {
+    display: table;
+    margin: 0;
+  }
+
   .prose :global(table) {
     width: 100%;
     border-collapse: collapse;
@@ -687,37 +760,69 @@ const projectLinks = [
     margin: var(--space-lg) 0;
   }
 
-  .prose :global(a.view-source) {
+  /* "See it on GitHub": pill with the GitHub mark, accent glow */
+  .prose :global(a.view-source),
+  :global(a.gh-button) {
     display: inline-flex;
-    gap: var(--space-sm);
+    gap: 0.7em;
     align-items: center;
-    min-height: 44px;
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md);
-    background: var(--color-accent-dark);
-    box-shadow: 0 4px 16px -4px var(--color-accent);
-    color: var(--color-text-inverse);
+    min-height: 52px;
+    padding: 0.85rem 1.6rem 0.85rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
+    border-radius: 999px;
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-dark),
+      color-mix(in srgb, var(--color-accent-dark) 70%, #000)
+    );
+    box-shadow:
+      0 6px 24px -8px var(--color-accent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    color: #fff;
     font-size: var(--text-base);
-    font-weight: 600;
+    font-weight: 650;
     line-height: 1;
     text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
-  .prose :global(a.view-source:hover) {
-    box-shadow: 0 8px 24px -6px var(--color-accent);
+  .prose :global(a.view-source svg),
+  :global(a.gh-button svg) {
+    flex: 0 0 auto;
+    width: 1.35em;
+    height: 1.35em;
   }
 
-  /* dark logo needs a light panel on the dark theme */
+  .prose :global(a.view-source:hover),
+  :global(a.gh-button:hover) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 32px -8px var(--color-accent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  /* transparent logo: drawn black, inverted to white on the dark theme */
   .prose :global(.logo-panel) {
-    padding: var(--space-xl);
-    border-radius: var(--radius-md);
-    background: #f4f1ea;
+    padding: var(--space-md) 0;
   }
 
   .prose :global(.logo-panel img) {
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  :global([data-theme='dark']) .prose :global(.logo-panel img) {
+    filter: invert(1);
+  }
+
+  /* image with a transparent background: no frame, no white tile */
+  .prose :global(.fig--bare a),
+  .prose :global(.fig--bare.fig--fill a) {
+    border: 0;
+    background: none;
   }
 
   .prose :global(.split h3) {
@@ -761,7 +866,7 @@ const projectLinks = [
   .case-next {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: var(--space-lg);
     margin-top: var(--space-3xl);
     padding-block: var(--space-xl);
@@ -796,6 +901,9 @@ const projectLinks = [
     .prose :global(.split),
     .prose :global(.split--text),
     .prose :global(.split--media),
+    .prose :global(.split--rev),
+    .prose :global(.split--rev.split--text),
+    .prose :global(.split--rev.split--media),
     .prose :global(.grid3),
     .prose :global(.cards),
     .prose :global(.stats--row),

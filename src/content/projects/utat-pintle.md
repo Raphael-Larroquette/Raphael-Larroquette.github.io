@@ -19,7 +19,7 @@ duration: 'From Oct 2025'
 <ul class="stats stats--row">
 <li><b>~3.0 kg/s</b>Total propellant flow at the design point</li>
 <li><b>3</b>Two-phase nitrous flow models implemented (SPI, HEM, Dyer)</li>
-<li><b>4</b>Orifice geometries evaluated</li>
+<li><b>Continuously throttleable</b>Fully throttleable with continuous mixture ratio for efficiency</li>
 </ul>
 
 ## Problem
@@ -84,11 +84,11 @@ duration: 'From Oct 2025'
 <li>A lead-screw-driven throttle varies the oxidizer and fuel orifice areas together</li>
 <li>O-ring grooves designed with Parker O-Ring Handbook</li>
 </ul>
-<figure class="fig">
+<figure class="fig fig--bare">
 <a href="/images/projects/pintle/close.png" target="_blank" rel="noopener"><img src="/images/projects/pintle/close.png" alt="Cross-section of the injector head showing the pintle post, oxidizer manifold and O-ring glands" loading="lazy" /></a>
 </figure>
 </div>
-<figure class="fig fig--fill">
+<figure class="fig fig--fill fig--bare">
 <a href="/images/projects/pintle/exploded.png" target="_blank" rel="noopener"><img src="/images/projects/pintle/exploded.png" alt="Exploded view of the injector assembly: cover plate, O-rings, pintle stem, manifold body, fittings and pintle sleeve" loading="lazy" /></a>
 </figure>
 </div>

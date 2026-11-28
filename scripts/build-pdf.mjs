@@ -7,7 +7,7 @@
 // output: never committed, regenerated on every deploy.
 
 import { createServer } from 'node:http';
-import { createReadStream, existsSync, statSync } from 'node:fs';
+import { copyFileSync, createReadStream, existsSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
 import { chromium } from 'playwright';
 
@@ -74,6 +74,10 @@ await page.pdf({
 
 await browser.close();
 server.close();
+
+// Also drop a copy in public/ (gitignored) so the download buttons work under
+// `npm run dev` too, which serves public/ but never sees dist/.
+copyFileSync(OUT, join('public', 'Raphael_Larroquette_Portfolio.pdf'));
 const mb = statSync(OUT).size / 1024 / 1024;
 console.log(`${OUT}: ${mb.toFixed(1)} MB`);
 if (mb > 10) console.warn('Over the 10 MB target: downscale page images');

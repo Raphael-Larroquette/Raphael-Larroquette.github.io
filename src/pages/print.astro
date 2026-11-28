@@ -476,6 +476,32 @@ const month = new Date().toLocaleDateString('en-CA', {
     align-items: center;
   }
 
+  .split--rev > :first-child {
+    order: 2;
+  }
+
+  .split--pair h2 {
+    margin-top: 0;
+  }
+
+  .split--step {
+    margin: 0;
+    padding-block: 3mm;
+  }
+
+  .split--step + .split--step {
+    border-top: 0.3mm solid var(--line);
+  }
+
+  .fig--logo {
+    justify-self: center;
+    width: 60mm;
+  }
+
+  .fig--bare img {
+    border: 0;
+  }
+
   .split--fill {
     align-items: stretch;
   }

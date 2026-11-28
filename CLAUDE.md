@@ -22,7 +22,7 @@ npm run preview   # serves the real build output
 - `src/pages/print.astro` (`/print/`, noindex, not in the sitemap) renders every live project from the same Markdown on A4: cover, contents, one project per new page. Print styles live in that file, not in the site CSS
 - `npm run build:full` = `astro build` + `scripts/build-pdf.mjs`, which prints `/print/` in headless Chromium to `dist/Raphael_Larroquette_Portfolio.pdf` (never committed). The deploy workflow runs `build:full`, so the PDF is always current
 - Videos become their poster image in the PDF; image links point at the live site
-- "Download Portfolio (PDF)" buttons: home hero, home resume block, foot of every project page. Under `npm run dev` the file doesn't exist, so those buttons 404 locally
+- "Download Portfolio (PDF)" buttons: home hero and home resume block only. `build-pdf.mjs` also copies the PDF into `public/` (gitignored) so the buttons work under `npm run dev` after one `npm run build:full`
 - Check it by rasterizing: `python -c "import fitz; [p.get_pixmap(dpi=60).save(f'review/pdf/p{i+1:02d}.png') for i,p in enumerate(fitz.open('dist/Raphael_Larroquette_Portfolio.pdf'))]"`
 
 ### Working version vs live version (option A: local + branch)
@@ -59,7 +59,7 @@ npm run preview   # serves the real build output
 | Project write-ups (one file each) | `src/content/projects/*.md` |
 | Project frontmatter schema | `src/content.config.ts` |
 | Project page template | `src/pages/work/[...slug].astro` |
-| Project list (`/work/`) | `src/pages/work/index.astro`, `src/components/portfolio/WorkArchive.astro` |
+| Project list | Only the `#projects` grid on the home page. The old `/work/` index is hidden (`src/pages/work/_index.astro`, `_page/`); project pages still live at `/work/<slug>/` |
 | Home | `src/pages/index.astro` (still theme demo copy) |
 | About | `src/pages/about.astro` (still theme demo copy) |
 | Header / footer | `src/components/common/Header.astro`, `Footer.astro` |
@@ -91,6 +91,12 @@ Markdown can't do side-by-side layouts, so pages use raw HTML blocks with classe
 | `.compare__col--chosen` | Accent border on the chosen variant's images |
 | `.grid3` | Three equal figure tiles |
 | `.grid3.grid3--frames` | Same three tiles, but each image sits in an identical 4:3 white frame (`object-fit: contain`), for images with different aspect ratios |
+| `.split--rev` | Image on the left, text on the right (markup stays text then image). Alternate it on numbered "How I did it" steps |
+| `.split--step` | Even spacing and a divider between numbered steps |
+| `.split--pair` | Two text sections side by side, each with its own `h2` (e.g. Problem / Goal) |
+| `.fig--bare` | Image with a transparent background: no frame, no white tile |
+| `.fig--logo` | Caps a wordmark's width. `.logo-panel` SVGs are drawn black and inverted to white on the dark theme |
+| `a.view-source` | "See it on GitHub" pill with the GitHub mark, inside a `p.view-source-row` |
 | `.cards` | Bordered text cards, two across |
 | `.decision` | Highlighted decision box |
 | `.stats`, `.stats--row` | Big-number stats, stacked or three across |
@@ -106,7 +112,9 @@ Markdown can't do side-by-side layouts, so pages use raw HTML blocks with classe
 - **Split vs full width.** If the text column is under ~60% of the image height: combine sections into one text column, use `--center`, narrow the image (`--text`), or crop the image (link the full one) and keep it beside the text. Wide tables and spreadsheets read better full width, or beside text if they are illustration rather than something to read
 - **Height cap.** Full-width figures are capped at 75vh (`object-fit: contain`); the link still opens the full file
 - **Drop what doesn't earn its space.** An image that repeats another, or a screenshot too small to read beside text, goes
-- **Run the audit before calling a page done:** `npm run build && node scripts/review.mjs`. It writes screenshots at 1440 / 1024 / 390 px, `review/report.md` and crops of every flag to `review/issues/`. Known accepted flags: the `aurora/lca-sq.png` border (shares a square canvas with its row) and the unused files kept as sources
+- **Run the audit before calling a page done:** `npm run build && node scripts/review.mjs`. It writes screenshots at 1440 / 1024 / 390 px, `review/report.md` and crops of every flag to `review/issues/`. Known accepted flag: the `aurora/lca-sq.png` border (shares a square canvas with its row)
+- **Unused images are kept, not deleted**: `public/images/projects/<project>/unused/` and `src/assets/images/projects/unused/`. The audit skips those folders
+- **Transparent renders**: `node scripts/remove-white-bg.mjs in.png out.png` flood-fills the white background from the edges to transparent and trims. Show them with `.fig--bare` (no frame, no white tile). The pintle detailed-design renders use this
 
 ### Images and video
 
@@ -152,7 +160,6 @@ ffmpeg -ss 15 -i in.mov -frames:v 1 -vf scale=1280:-2 -q:v 4 out-poster.jpg
 - Possible second-tier projects for `/work/` (ask before adding): BSSR Slack sign-up bot, shop PC fleet deployment, MIE243 drivetrain project
 - Rebuild Home (hero, 3 or 4 featured projects, tools/skills, a few photos of him, the team and hobbies) and About, using the same layout blocks
 - Font: undecided. Options shown: Inter (current), Space Grotesk headings, Instrument Serif headings, IBM Plex Sans + Mono
-- Unused leftovers to clean up (check with grep before deleting): old `aurora-*` images and placeholder covers in `src/assets/images/projects/`, and the loose files at the top of `public/images/projects/` that were replaced by the `aurora/` subfolder
 
 **Open questions on the Aurora page**
 

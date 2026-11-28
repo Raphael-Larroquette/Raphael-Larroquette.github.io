@@ -48,11 +48,10 @@ if (!(await up())) {
 // ---------- pages ----------
 
 const projectSlugs = readdirSync('dist/work').filter(
-  (d) => statSync(join('dist/work', d)).isDirectory() && d !== 'page',
+  (d) => statSync(join('dist/work', d)).isDirectory(),
 );
 const pages = [
   { name: 'home', path: '/' },
-  { name: 'work', path: '/work/' },
   ...projectSlugs.map((s) => ({ name: s, path: `/work/${s}/` })),
 ];
 
@@ -273,7 +272,10 @@ function walk(dir) {
 }
 
 const fileFlags = [];
-const imageFiles = walk('public/images/projects').filter((f) => /\.(png|jpe?g|webp)$/i.test(f));
+// unused/ folders hold kept source images that aren't on any page
+const imageFiles = walk('public/images/projects').filter(
+  (f) => /\.(png|jpe?g|webp)$/i.test(f) && !/[\\/]unused[\\/]/.test(f),
+);
 for (const f of imageFiles) {
   const url = '/' + relative('public', f).split('\\').join('/');
   if (!usedImages.has(url)) fileFlags.push({ kind: 'unused-file', detail: url });

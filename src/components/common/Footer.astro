@@ -48,21 +48,23 @@ const footerLinks = siteConfig.footer.links.filter((link) => {
           </ul>
         </div>
 
-        <!-- Resources -->
-        <div class="footer-section">
-          <h4 class="footer-subtitle">Resources</h4>
-          <ul class="footer-links">
-            {
-              footerLinks.map((link) => (
-                <li>
-                  <a href={withBase(link.href)} class="footer-link">
-                    {link.name}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
+        <!-- Resources (only when site.config footer.links has entries) -->
+        {
+          footerLinks.length > 0 && (
+            <div class="footer-section">
+              <h4 class="footer-subtitle">Resources</h4>
+              <ul class="footer-links">
+                {footerLinks.map((link) => (
+                  <li>
+                    <a href={withBase(link.href)} class="footer-link">
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
 
         <!-- Social Links -->
         <div class="footer-section">

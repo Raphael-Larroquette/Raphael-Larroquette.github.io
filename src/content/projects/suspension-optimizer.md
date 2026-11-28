@@ -21,7 +21,7 @@ links:
   github: 'https://github.com/Raphael-Larroquette/BSSR-suspension'
 ---
 
-<p class="view-source-row"><a class="view-source" href="https://github.com/Raphael-Larroquette/BSSR-suspension" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">↗</span></a></p>
+<p class="view-source-row"><a class="view-source" href="https://github.com/Raphael-Larroquette/BSSR-suspension" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>See it on GitHub <span aria-hidden="true">↗</span></a></p>
 
 <figure class="fig">
 <video autoplay loop muted playsinline preload="metadata" poster="/images/projects/suspension-optimizer/hero-sweep-poster.jpg" aria-label="Suspension sweep animation with instant-centre and roll-centre overlays">
@@ -35,15 +35,16 @@ links:
 <li><b>Pareto Optimized</b>Suspension designs lie on the boundary of performance.</li>
 </ul>
 
-## Problem
-
+<div class="split split--pair">
+<div>
+<h2>Problem</h2>
 <ul>
 <li>Our tadpole (3-wheeled vehicle) behaves very differently from the 4-wheeled vehicles that commercial suspension tools assume</li>
 <li>A solar car needs to minimize rolling-resistance losses while vehicle design literature focuses on maximising grip</li>
 </ul>
-
-## Goal
-
+</div>
+<div>
+<h2>Goal</h2>
 <ul>
 <li>Natively handle 3-wheeled vehicles</li>
 <li>Support flexible front and rear suspension layouts</li>
@@ -51,10 +52,12 @@ links:
 <li>Calculate and optimize joint characteristics</li>
 <li>Usable by future generations</li>
 </ul>
+</div>
+</div>
 
 ## How I did it
 
-<div class="split split--text">
+<div class="split split--center split--step">
 <div>
 <h3>1. Tadpole-native foundation</h3>
 <ul>
@@ -62,12 +65,12 @@ links:
 <li>Added single rear wheel centre class, hand deriving new equations for anti geometry and load transfer.</li>
 </ul>
 </div>
-<figure class="fig">
+<figure class="fig fig--logo">
 <div class="logo-panel"><img src="/images/projects/suspension-optimizer/suspension-explorer-logo.svg" alt="suspension-explorer-core wordmark" loading="lazy" /></div>
 </figure>
 </div>
 
-<div class="split split--center">
+<div class="split split--center split--step split--rev">
 <div>
 <h3>2. Sweeps</h3>
 <ul>
@@ -90,7 +93,7 @@ links:
 </figure>
 </div>
 
-<div class="split split--center">
+<div class="split split--center split--step">
 <div>
 <h3>4. Suspension layout-agnostic force solver</h3>
 <ul>
@@ -103,7 +106,7 @@ links:
 </figure>
 </div>
 
-<div class="split split--text split--center">
+<div class="split split--center split--step split--rev">
 <div>
 <h3>5. Multi-objective optimizer</h3>
 <ul>

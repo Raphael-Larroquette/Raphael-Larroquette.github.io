@@ -9,7 +9,7 @@ tech:
   - '3DEXPERIENCE'
   - 'CATIA'
   - 'ENOVIA'
-role: ''
+role: 'Mechanical Lead'
 year: 2026
 client: 'Blue Sky Solar Racing (Gen13)'
 ---
@@ -124,10 +124,4 @@ client: 'Blue Sky Solar Racing (Gen13)'
 <ul>
 <li>Standardized fasteners, projected to cut fastener cost by ~50% (~$1,600 → ~$800 CAD)</li>
 <li>Design a part well once, then reuse it across the car as a standard part (e.g. composite inserts)</li>
-</ul>
-
-## Drawing templates <span class="tag-wip">Work in progress</span>
-
-<ul>
-<li>Drawing templates per manufacturing method, with that method's tolerances built in</li>
 </ul>

@@ -78,7 +78,7 @@ const siteConfig: SiteConfig = {
   name: 'Raphael Larroquette',
   title: 'Raphael Larroquette - Mechanical Engineering',
   description:
-    'Mechanical engineering student at the University of Toronto. Suspension, drivetrain and structures work across design teams and research.',
+    'Mechanical engineering student at the University of Toronto. Interested in conceptual and detailed design work on dynamic systems, focused on suspension and mechanical work across design teams and research.',
   author: 'Raphael Larroquette',
   url: 'https://raphael-larroquette.github.io',
   ogImage: '/og-image.png',
@@ -136,7 +136,8 @@ const siteConfig: SiteConfig = {
   },
 
   footer: {
-    links: [{ name: 'Sitemap', href: '/sitemap-index.xml' }],
+    // The sitemap is still generated for search engines, just not linked.
+    links: [],
   },
 };
 
