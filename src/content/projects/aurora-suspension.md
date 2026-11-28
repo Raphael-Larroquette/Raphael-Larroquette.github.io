@@ -1,7 +1,7 @@
 ---
-title: 'Aurora Suspension & Steering Redesign'
-summary: "Redesigned Aurora's front suspension kinematics in CATIA, MATLAB and SUSProg to optimise for lateral stability and on-track performance."
-description: 'Aurora lifted a wheel in the figure-eight and could not pass scrutineering. I traced it to two root causes and redesigned the front end around +60 mm of track width. It passed on the first attempt at race.'
+title: 'Suspension & Steering Redesign'
+summary: "Redesigned a Solar Cars front suspension kinematics in CATIA, MATLAB and SUSProg to optimise for lateral stability and on-track performance."
+description: 'The race car lifted a wheel in the figure-eight and could not pass scrutineering. I traced it to two root causes and redesigned the front end around +60 mm of track width. It passed on the first attempt at race.'
 cover: '../../assets/images/projects/aurora-cover.jpg'
 coverAlt: 'Aurora solar car cornering during figure-eight testing with the inside front wheel lifted off the ground'
 tech:
@@ -21,7 +21,7 @@ duration: 'Jan - May 2026'
 <div class="split split--text">
 <div>
 <ul>
-<li>Aurora is the team's first three-wheeled car</li>
+<li>This was the team's first three-wheeled car</li>
 <li>It failed the figure-eight at competition, missing the 16 second time required</li>
 <li>After replacing some parts, the inside wheel still lifted in testing</li>
 <li>This is when I joined the team</li>
@@ -84,7 +84,6 @@ I built a fully functional front suspension assembly in CATIA Assembly Design so
 <li>Built from first principles: front view geometry and Ackermann calculations</li>
 <li>Checked motion and clashing in the full CATIA assembly</li>
 <li>Checked kinematics in SUSProg</li>
-<li>Fully parametric off the hardpoints, so geometry changes propagate to all parts</li>
 </ul>
 </div>
 <figure class="fig">
@@ -116,7 +115,7 @@ I designed three variants, all with an asymmetric rod-end attachment to match re
 </div>
 <div class="compare__col">
 <figure class="fig"><a href="/images/projects/aurora/uca-welded.png" target="_blank" rel="noopener"><img src="/images/projects/aurora/uca-welded.png" alt="Welded 4130 steel tube upper control arm" loading="lazy" /></a></figure>
-<div><p class="compare__name">Welded 4130 tube</p><ul><li>Sponsor manufactured</li><li>$100 CAD for two</li><li>Safety board's preference</li></ul></div>
+<div><p class="compare__name">Welded 4130 tube</p><ul><li>Sponsor manufactured</li><li>Safety board's preference</li><li>$100 CAD for two</li></ul></div>
 <figure class="fig"><a href="/images/projects/aurora/uca-sim-welded.png" target="_blank" rel="noopener"><img src="/images/projects/aurora/uca-sim-welded.png" alt="Safety factor plot for the welded UCA" loading="lazy" /></a></figure>
 <ul class="compare__sim"><li>Very low safety factor at the weld fillets</li><li>Sim results could not be trusted</li><li>190 g each</li></ul>
 </div>
@@ -127,7 +126,7 @@ I designed three variants, all with an asymmetric rod-end attachment to match re
 <li><strong>Chose the machined arm</strong></li>
 <li>Couldn't verify the welded results in the time we had</li>
 <li>The waterjet's deflection was bad enough that it was selected only as a backup</li>
-<li>Built a new fatigue framework (derating results for loading type, surface finish, size, environment, etc.) so I could present the aluminium part to the safety board with confidence</li>
+<li>Built a new fatigue framework (accounting for loading type, surface finish, size, environment, etc.) to confidently present the aluminium part to the safety board</li>
 </ul>
 </div>
 
@@ -173,20 +172,12 @@ I designed three variants, all with an asymmetric rod-end attachment to match re
 </figure>
 </div>
 
-## Where it went wrong
-
-<ul>
-<li>One LCA bearing bore came back undersized because of a drawing error</li>
-<li>Got the part remachined</li>
-<li>Hand-made a custom jig and wrote an in-depth install guide to make sure the spherical bearings were installed properly</li>
-</ul>
-
 ## It worked
 
 <ul class="stats stats--row">
-<li><b>~15.5 s</b>Both sides, every driver, consistently. The limit is 16 s.</li>
+<li><b>~15.5 s</b>Both sides, all drivers, consistently. The limit is 16 s.</li>
 <li><b>17 s to 15 s</b>Best time before and after the redesign.</li>
-<li><b>First attempt</b>Passed the figure-eight at race with every driver, plus slalom.</li>
+<li><b>First attempt</b>Passed the figure-eight at race with every driver, plus slalom first try as well.</li>
 </ul>
 
 <div class="split">
@@ -194,13 +185,13 @@ I designed three variants, all with an asymmetric rod-end attachment to match re
 <video controls preload="metadata" poster="/video/aurora-figure8-poster.jpg">
 <source src="/video/aurora-figure8.mp4" type="video/mp4" />
 </video>
-<figcaption>Figure-eight.</figcaption>
+<figcaption>Aurora's first attempt at the Figure-eight.</figcaption>
 </figure>
 <figure class="fig">
 <video controls preload="metadata" poster="/video/aurora-slalom-poster.jpg">
 <source src="/video/aurora-slalom.mp4" type="video/mp4" />
 </video>
-<figcaption>Slalom.</figcaption>
+<figcaption>Aurora's first full speed Slalom run.</figcaption>
 </figure>
 </div>
 
@@ -209,18 +200,18 @@ I designed three variants, all with an asymmetric rod-end attachment to match re
 <div class="cards">
 <div>
 <p class="cards__title">Account for bearing misalignment from the start</p>
-<p>The clashes that began this were invisible at design time. My suspension tool now reports maximum misalignment per joint across a sweep.</p>
+<p>The clashes that began this were invisible at design time. My new suspension tool aims to solve this.</p>
 </div>
 <div>
 <p class="cards__title">Design suspension components parametrically</p>
-<p>From the outset, not once the geometry is already moving.</p>
+<p>From the outset, not once the geometry is already moving. Therefore, changing two hardpoints is immediately reflected on the part and ready for FEA.</p>
 </div>
 <div>
 <p class="cards__title">Account for fatigue</p>
-<p>Through the whole design, not added late to justify a material decision.</p>
+<p>Through the whole design, conducting hand calculations when making early design decisions.</p>
 </div>
 <div>
 <p class="cards__title">Triple check calculations, and hand derive them</p>
-<p>An inherited load transfer error survived a full design generation. Re-deriving it by hand is what caught it.</p>
+<p>Inherited errors can be the hardest to catch, and assumptions made in textbook equations can be a challenge with such a novel vehicle.</p>
 </div>
 </div>

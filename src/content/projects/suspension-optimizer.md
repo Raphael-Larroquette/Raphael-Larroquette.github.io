@@ -12,10 +12,10 @@ tech:
   - 'SUSProg'
   - 'CATIA 3DX'
   - 'Desmos'
-role: 'Technical lead / engineering owner'
+role: 'Mechanical Lead'
 year: 2026
 featured: true
-client: 'Blue Sky Solar Racing (Gen13)'
+client: 'Blue Sky Solar Racing'
 duration: 'Aug 2026 to present'
 links:
   github: 'https://github.com/Raphael-Larroquette/BSSR-suspension'
@@ -32,20 +32,21 @@ links:
 <ul class="stats stats--row">
 <li><b>~12 s</b>To analyze a candidate design (previously 1 to 2 hours)</li>
 <li><b>1064 → 960 mm</b>Track width, through faster iteration with the whole team</li>
+<li><b>Pareto Optimized</b>Suspension designs lie on the boundary of performance.</li>
 </ul>
 
 ## Problem
 
 <ul>
-<li>Commercial suspension tools assume 4 wheels. A tadpole (2 front, 1 rear) behaves differently</li>
-<li>Suspension design literature focuses on grip. A solar car needs to minimize rolling-resistance losses</li>
+<li>Our Tadpole (3 Wheeled Vehicle) behaves entirely distinct to the 4 wheeled vehicles commercial suspension tools assume</li>
+<li>A solar car needs to minimize rolling-resistance losses while vehicle design literature focuses on maximising grip</li>
 </ul>
 
 ## Goal
 
 <ul>
 <li>Natively handle 3-wheeled vehicles</li>
-<li>Support flexible front and rear architectures</li>
+<li>Support flexible front and rear suspension layouts</li>
 <li>Solve forces for every suspension component</li>
 <li>Calculate and optimize joint characteristics</li>
 <li>Usable by future generations</li>
@@ -58,8 +59,7 @@ links:
 <h3>1. Tadpole-native foundation</h3>
 <ul>
 <li>Extended the open-source <a href="https://github.com/suspension-explorer/suspension-explorer-core" target="_blank" rel="noopener noreferrer">suspension-explorer-core</a> kinematics library</li>
-<li>Added a single-wheel centre rear class (trailing arm), and three-contact-patch load distribution solved directly from statics</li>
-<li>Derived anti-geometry equations for a single-wheel rear axle driven by a hub motor</li>
+<li>Added single rear wheel centre class, hand deriving new equations for anti geometry and load transfer.</li>
 </ul>
 </div>
 <figure class="fig">
@@ -72,8 +72,7 @@ links:
 <h3>2. Sweeps</h3>
 <ul>
 <li>Created sweeps of wheel z position and rack displacement</li>
-<li>Reports camber, toe, KPI, caster, trail, scrub, bump steer, bump scrub, roll centre, instant centres, Ackermann and motion ratio</li>
-<li>Multi-core batch runner produces a cross-sweep report for every candidate</li>
+<li>Reports suspension characteristics at every point in the suspensions motion</li>
 </ul>
 </div>
 <figure class="fig">
@@ -85,8 +84,8 @@ links:
 <ul>
 <li>Aurora's rod ends broke because misalignment wasn't considered from the start of design. Therefore I:
 <ul>
-<li>Made all steering sweeps calculate the angular displacement of each rod end and spherical bearing</li>
-<li>Reported maximum values, along with the forces at every joint, for easy rod-end selection</li>
+<li>Made all sweeps calculate the angular displacement at every joint</li>
+<li>The reported maximum values, along with the forces at every joint, allow for easy rod-end selection</li>
 </ul>
 </li>
 </ul>
@@ -97,10 +96,9 @@ links:
 
 <div class="split split--text">
 <div>
-<h3>4. Architecture-agnostic force solver</h3>
+<h3>4. Suspension layout-agnostic force solver</h3>
 <ul>
-<li>Builds a 3D static-equilibrium matrix from the linkage itself, identifying bodies and two-force members automatically, so new layouts need no new hand derivations</li>
-<li>The solver identifies statically indeterminate situations and takes equal-force assumptions to resolve them</li>
+<li>The software builds a static-equilibrium matrix from the linkages, identifying bodies and two-force members automatically, so new layouts need no new hand calculations</li>
 <li>Exports all part-relative loads directly for Ansys FEA</li>
 </ul>
 </div>
@@ -117,9 +115,9 @@ links:
 <div>
 <h3>5. Multi-objective optimizer</h3>
 <ul>
-<li>Implemented NSGA-III using pymoo to optimize 5 objectives over 21 parameters</li>
-<li>Used integral-based objectives to score each characteristic over the whole range of motion, not just one pose</li>
-<li>Implemented a quasi-static cornering objective that targets near-zero road-relative camber (tyre flat on the road) in specific turns</li>
+<li>Implemented NSGA-III to optimize 5 objectives over 21 parameters</li>
+<li>Used integral-based objectives to score each desired characteristic over the whole range of motion, not just the design position</li>
+<li>Created a quasi-static cornering metric that to get near zero road relative camber in turns, for efficiency</li>
 </ul>
 </div>
 <div>
@@ -135,11 +133,10 @@ links:
 <tr><td>Ackermann error</td><td>Install ratio 0.6 to 1.01</td></tr>
 <tr><td>Camber gain over travel</td><td>Min shock length</td></tr>
 <tr><td>Road camber in corners</td><td>Min turn angle 17.5°</td></tr>
-<tr><td></td><td>Inboard instant centre</td></tr>
 </tbody>
 </table>
 </div>
-<figcaption>NSGA-III (pymoo), 5 objectives, 21 hardpoint parameters.</figcaption>
+<figcaption>NSGA-III objectives and constraints.</figcaption>
 </figure>
 </div>
 </div>
@@ -151,15 +148,15 @@ links:
 <div class="grid3">
 <figure class="fig">
 <a href="/images/projects/suspension-optimizer/susprog.jpg" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/susprog.jpg" alt="The same suspension geometry modelled in SUSProg" loading="lazy" /></a>
-<figcaption><strong>SUSProg.</strong> Same geometry compared. Kinematics matched; a mismatch traced back to an error in the SUSProg setup.</figcaption>
+<figcaption><strong>SUSProg.</strong> Same geometry independently confirmed through a known good software.</figcaption>
 </figure>
 <figure class="fig">
 <a href="/images/projects/suspension-optimizer/desmos.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/desmos.png" alt="Desmos front-view four-bar model with a slider for lower control arm rotation" loading="lazy" /></a>
-<figcaption><strong>Desmos four-bar.</strong> An independent four-bar model, used to check the linkage kinematics.</figcaption>
+<figcaption><strong>Desmos four-bar.</strong> Manually written 4 bar model to confirm front view kinematics.</figcaption>
 </figure>
 <figure class="fig">
 <a href="/images/projects/suspension-optimizer/fbd.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/fbd.png" alt="Hand-solved free-body diagram used to check the solver" loading="lazy" /></a>
-<figcaption><strong>Hand-solved FBD.</strong> The solver matched the hand-solved free-body diagram.</figcaption>
+<figcaption><strong>Hand-solved FBD.</strong> The solver matched hand derived equations for the double wishbone suspension.</figcaption>
 </figure>
 </div>
 
@@ -168,7 +165,7 @@ links:
 <h3>Real car</h3>
 <ul>
 <li>The quasi-static cornering model predicted ~4° of outer-wheel road-relative camber on Aurora's Figure-8 path</li>
-<li>That matched closely, by visual comparison, with on-board video of the car running it</li>
+<li>That matched closely with the cars actual driving.</li>
 </ul>
 </div>
 <figure class="fig">
@@ -185,8 +182,7 @@ links:
 <ul>
 <li>Candidate analysis cut from 1 to 2 hours to ~12 seconds</li>
 <li>Faster iteration on track width with the rest of the team: 1064 → 960 mm. The smaller frontal area cuts the power needed to overcome drag at cruising speed by ~10%</li>
-<li>Designed out Aurora's rod-end failure mode: misalignment limits were set from the first sketch, not discovered after a failure</li>
-<li>Built for reuse: one-command runs, no hidden defaults, and docs written for future team members</li>
+<li>Built for reuse: well documented, no hidden defaults, vertically integrated force solves, and infinitely expandable</li>
 </ul>
 </div>
 <figure class="fig">
@@ -194,4 +190,4 @@ links:
 </figure>
 </div>
 
-<p class="attrib">Built on <a href="https://github.com/suspension-explorer/suspension-explorer-core" target="_blank" rel="noopener noreferrer">suspension-explorer-core</a>. Code written with an AI coding assistant (Claude) under my direction. I set the requirements and architecture, made the engineering decisions, and reviewed and validated the results.</p>
+<p class="attrib">Built on <a href="https://github.com/suspension-explorer/suspension-explorer-core" target="_blank" rel="noopener noreferrer">suspension-explorer-core</a>.</p>
