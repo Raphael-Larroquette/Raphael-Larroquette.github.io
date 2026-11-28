@@ -67,19 +67,13 @@ links:
 </figure>
 </div>
 
-<div class="split split--text">
+<div class="split split--center">
 <div>
 <h3>2. Sweeps</h3>
 <ul>
 <li>Created sweeps of wheel z position and rack displacement</li>
 <li>Reports suspension characteristics at every point in the suspensions motion</li>
 </ul>
-</div>
-<figure class="fig">
-<a href="/images/projects/suspension-optimizer/bump-plots.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/bump-plots.png" alt="Bump sweep plots: camber, caster, toe, scrub radius, trail, half track, damper length, motion ratio, installation ratio, roll-centre height, track change, steering ratio and camber gain against left wheel travel" loading="lazy" /></a>
-</figure>
-</div>
-
 <h3>3. Joint misalignment analysis</h3>
 <ul>
 <li>Aurora's rod ends broke because misalignment wasn't considered from the start of design. Therefore I:
@@ -89,12 +83,14 @@ links:
 </ul>
 </li>
 </ul>
-
+</div>
 <figure class="fig">
-<a href="/images/projects/suspension-optimizer/alignment.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/alignment.png" alt="Table of required and best-available misalignment angle per joint, naming the sweep step that sets each maximum" loading="lazy" /></a>
+<a href="/images/projects/suspension-optimizer/bump-plots.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/bump-plots-crop.png" alt="Bump sweep plots: camber, caster, toe, scrub radius, trail and half track against left wheel travel" loading="lazy" /></a>
+<figcaption>6 of the 13 bump sweep plots. Click for all of them.</figcaption>
 </figure>
+</div>
 
-<div class="split split--text">
+<div class="split split--center">
 <div>
 <h3>4. Suspension layout-agnostic force solver</h3>
 <ul>
@@ -103,15 +99,11 @@ links:
 </ul>
 </div>
 <figure class="fig">
-<a href="/images/projects/suspension-optimizer/fbd.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/fbd.png" alt="Hand-solved free-body diagram of the suspension linkage" loading="lazy" /></a>
+<a href="/images/projects/suspension-optimizer/forces.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/forces.png" alt="Output force table for the lower wishbone inboard front joint across bump, brake and corner cases" loading="lazy" /></a>
 </figure>
 </div>
 
-<figure class="fig">
-<a href="/images/projects/suspension-optimizer/forces.png" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/forces.png" alt="Output force table for the lower wishbone inboard front joint across bump, brake and corner cases" loading="lazy" /></a>
-</figure>
-
-<div class="split split--text">
+<div class="split split--text split--center">
 <div>
 <h3>5. Multi-objective optimizer</h3>
 <ul>
@@ -141,11 +133,11 @@ links:
 </div>
 </div>
 
-<p class="view-source-row"><a class="view-source" href="https://github.com/Raphael-Larroquette/BSSR-suspension" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">↗</span></a></p>
-
 ## Validation
 
-<div class="grid3">
+<p>I successfully validated the software through 3 different methods.</p>
+
+<div class="grid3 grid3--frames">
 <figure class="fig">
 <a href="/images/projects/suspension-optimizer/susprog.jpg" target="_blank" rel="noopener"><img src="/images/projects/suspension-optimizer/susprog.jpg" alt="The same suspension geometry modelled in SUSProg" loading="lazy" /></a>
 <figcaption><strong>SUSProg.</strong> Same geometry independently confirmed through a known good software.</figcaption>
@@ -160,7 +152,7 @@ links:
 </figure>
 </div>
 
-<div class="split split--text">
+<div class="split split--text split--center">
 <div>
 <h3>Real car</h3>
 <ul>

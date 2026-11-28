@@ -5,20 +5,30 @@ Astro renders everything to static HTML at build time. No server, no runtime.
 
 ## Daily loop
 
+Two versions of the site:
+
+- **Working version**: `npm run dev` on the `dev` branch. Shows draft projects too, reloads on save
+- **Live version**: whatever is on `main`. Every push to `main` deploys
+
 ```sh
+git switch dev   # work here
 npm run dev      # http://localhost:3000 - save a file, browser reloads
-npm run build    # catches schema errors dev is lenient about - run before pushing
-```
-
-Ship it:
-
-```sh
+npm run build    # catches schema errors dev is lenient about - run before merging
 git add -A
 git commit -m "what changed"
-git push
+git push         # saves the work on GitHub, does NOT go live
 ```
 
-Push to `main` triggers `.github/workflows/deploy.yml`. Live in ~1-2 min.
+Publish (only when the change should go live):
+
+```sh
+git switch main
+git merge dev
+git push         # triggers .github/workflows/deploy.yml, live in ~1-2 min
+git switch dev
+```
+
+Hide an unfinished project from the live site with `draft: true` in its frontmatter.
 
 ## Where things live
 

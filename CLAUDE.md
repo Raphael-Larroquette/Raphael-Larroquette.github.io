@@ -17,6 +17,13 @@ npm run build     # run before every push; catches schema errors dev lets throug
 npm run preview   # serves the real build output
 ```
 
+### Working version vs live version (option A: local + branch)
+
+- Work on the `dev` branch. `npm run dev` is the working version: it shows drafts and reloads on save
+- `main` is the live site. Merge `dev` into `main` only to publish, since every push to `main` deploys
+- Live projects: `suspension-optimizer`, `aurora-suspension`, `3dx-plm`, `utat-pintle`. `window-fairing`, `pcb-design`, `buzzer-system` are `draft: true`
+- `PUBLIC_SHOW_DRAFTS=true` at build time also shows drafts (`SHOW_DRAFTS` in `src/lib/projects.ts`), ready if a hosted preview (option B, Cloudflare Pages on the `dev` branch) is ever wanted
+
 ## How Raphael wants to work
 
 - He is a Mechanical Engineering student at U of T on Blue Sky Solar Racing (solar car) and the UofT Aerospace Team
@@ -70,11 +77,12 @@ Markdown can't do side-by-side layouts, so pages use raw HTML blocks with classe
 
 | Class | Use |
 | --- | --- |
-| `.split` | Two columns, text beside an image. Variants: `--text` (wider text), `--media` (wider image), `--top` |
+| `.split` | Two columns, text beside an image. Variants: `--text` (wider text), `--media` (wider image), `--top`, `--center` (text centred against a taller image), `--fill` (with `.fig--fill` on the image: the image column takes the text column's height, image contained in a white frame) |
 | `.compare` > `.compare__col` | Three columns that line up row by row via subgrid: render / description / sim / sim notes |
 | `.compare__name[data-badge="..."]` | Badge next to a variant name (e.g. "Chosen") |
 | `.compare__col--chosen` | Accent border on the chosen variant's images |
 | `.grid3` | Three equal figure tiles |
+| `.grid3.grid3--frames` | Same three tiles, but each image sits in an identical 4:3 white frame (`object-fit: contain`), for images with different aspect ratios |
 | `.cards` | Bordered text cards, two across |
 | `.decision` | Highlighted decision box |
 | `.stats`, `.stats--row` | Big-number stats, stacked or three across |
@@ -82,6 +90,15 @@ Markdown can't do side-by-side layouts, so pages use raw HTML blocks with classe
 | `.eyebrow` | Small accent label above a list |
 
 **No blank lines inside an HTML block.** A blank line ends the block, and anything indented after it is parsed as a code block.
+
+### Layout rules
+
+- **Trim CAD renders** before using them: `node scripts/trim-renders.mjs file.png` (4% margin). For a row that must share one canvas, `--group` crops all files to the union box. It overwrites in place; originals stay in git history
+- **One aspect ratio per row.** Images side by side share a canvas size, or go in `.grid3--frames`
+- **Split vs full width.** If the text column is under ~60% of the image height: combine sections into one text column, use `--center`, narrow the image (`--text`), or crop the image (link the full one) and keep it beside the text. Wide tables and spreadsheets read better full width, or beside text if they are illustration rather than something to read
+- **Height cap.** Full-width figures are capped at 75vh (`object-fit: contain`); the link still opens the full file
+- **Drop what doesn't earn its space.** An image that repeats another, or a screenshot too small to read beside text, goes
+- **Run the audit before calling a page done:** `npm run build && node scripts/review.mjs`. It writes screenshots at 1440 / 1024 / 390 px, `review/report.md` and crops of every flag to `review/issues/`. Known accepted flags: the `aurora/lca-sq.png` border (shares a square canvas with its row) and the unused files kept as sources
 
 ### Images and video
 
@@ -127,7 +144,6 @@ ffmpeg -ss 15 -i in.mov -frames:v 1 -vf scale=1280:-2 -q:v 4 out-poster.jpg
 - Possible second-tier projects for `/work/` (ask before adding): BSSR Slack sign-up bot, shop PC fleet deployment, MIE243 drivetrain project
 - Rebuild Home (hero, 3 or 4 featured projects, tools/skills, a few photos of him, the team and hobbies) and About, using the same layout blocks
 - Font: undecided. Options shown: Inter (current), Space Grotesk headings, Instrument Serif headings, IBM Plex Sans + Mono
-- Add a resume PDF at `public/resume.pdf` and link it
 - Unused leftovers to clean up (check with grep before deleting): old `aurora-*` images and placeholder covers in `src/assets/images/projects/`, and the loose files at the top of `public/images/projects/` that were replaced by the `aurora/` subfolder
 
 **Open questions on the Aurora page**

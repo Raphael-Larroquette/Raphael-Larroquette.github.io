@@ -63,11 +63,11 @@ const {
           showYear && (
             <>
               <span>{year}</span>
-              <span aria-hidden="true">/</span>
+              {role && <span aria-hidden="true">/</span>}
             </>
           )
         }
-        <span>{role}</span>
+        {role && <span>{role}</span>}
       </div>
 
       <h2 class="project__title">{title}</h2>
@@ -112,6 +112,12 @@ const {
     background:
       linear-gradient(135deg, var(--color-accent-glass), transparent),
       var(--color-surface);
+  }
+
+  /* <picture> is inline by default; make it fill so the img's height: 100% works */
+  .project__visual :global(picture) {
+    display: block;
+    height: 100%;
   }
 
   .project__visual :global(.project__image) {
@@ -238,30 +244,9 @@ const {
     }
   }
 
-  @media (min-width: 900px) {
-    .project--featured {
-      grid-column: 1 / -1;
-    }
-
-    .project--featured .project__card {
-      grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.8fr);
-      grid-template-rows: none;
-    }
-
-    .project--featured .project__visual {
-      aspect-ratio: auto;
-      min-height: 31rem;
-    }
-
-    .project--featured .project__body {
-      justify-content: end;
-      padding: var(--space-2xl);
-    }
-
-    .project--featured .project__title {
-      font-size: var(--text-4xl);
-    }
-  }
+  /* The featured variant used to be a full-width side-by-side card. On /work/
+     every card is now the same size in a 2x2 grid; featured only adds the
+     "Selected work" badge. */
 
   @media (max-width: 640px) {
     .project__body {

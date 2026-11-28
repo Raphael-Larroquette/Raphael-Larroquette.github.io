@@ -398,6 +398,13 @@ const projectLinks = [
     height: auto;
   }
 
+  /* height cap for full-width figures: never taller than most of the screen;
+     the full-size file is still one click away through the link */
+  .prose > :global(.fig img) {
+    max-height: 75vh;
+    object-fit: contain;
+  }
+
   .prose :global(figcaption) {
     margin-top: var(--space-sm);
     color: var(--color-text-muted);
@@ -430,6 +437,35 @@ const projectLinks = [
 
   .prose :global(.split--top) {
     align-items: start;
+  }
+
+  /* short text beside a taller image: centre the text against it */
+  .prose :global(.split--center) {
+    align-items: center;
+  }
+
+  /* the image column takes the height of the text column, image contained
+     in a white frame. For a tall render beside text + another figure */
+  .prose :global(.split--fill) {
+    align-items: stretch;
+  }
+
+  .prose :global(.fig--fill) {
+    position: relative;
+    min-height: 16rem;
+  }
+
+  .prose :global(.fig--fill a) {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+  }
+
+  .prose :global(.fig--fill img) {
+    width: 100%;
+    height: 100%;
+    padding: var(--space-sm);
+    object-fit: contain;
   }
 
   .prose :global(.split > div > :last-child) {
@@ -506,6 +542,22 @@ const projectLinks = [
     gap: clamp(1.25rem, 2.5vw, 2.5rem);
     align-items: start;
     margin: var(--space-md) 0 var(--space-xl);
+  }
+
+  /* equal white frames for images with different aspect ratios (contain, never crop) */
+  .prose :global(.grid3--frames .fig a) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    padding: var(--space-sm);
+    background: #fff;
+  }
+
+  .prose :global(.grid3--frames .fig img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   /* bordered text cards, two across */
@@ -745,6 +797,20 @@ const projectLinks = [
     .prose :global(.stats--row),
     .prose :global(.stats--four) {
       grid-template-columns: 1fr;
+    }
+
+    /* stacked: the filled figure goes back to its own height, capped */
+    .prose :global(.fig--fill) {
+      min-height: 0;
+    }
+
+    .prose :global(.fig--fill a) {
+      position: static;
+    }
+
+    .prose :global(.fig--fill img) {
+      height: auto;
+      max-height: 70vh;
     }
 
     .prose :global(.compare) {

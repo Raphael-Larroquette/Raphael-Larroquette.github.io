@@ -4,6 +4,7 @@ summary: "Restructured the team's CAD data platform with access control, approva
 description: "Set up Blue Sky Solar Racing's 3DEXPERIENCE platform for Gen13: who can edit what, how designs get approved, and how parts are tagged, reused and drawn."
 cover: '../../assets/images/projects/3dx-plm-cover.png'
 coverAlt: 'The 3DEXPERIENCE logo'
+showCover: false
 tech:
   - '3DEXPERIENCE'
   - 'CATIA'
@@ -69,7 +70,7 @@ client: 'Blue Sky Solar Racing (Gen13)'
 <a href="/images/projects/3dx-plm/user-groups.png" target="_blank" rel="noopener"><img src="/images/projects/3dx-plm/user-groups.png" alt="User Groups panel listing the ten groups on the platform" loading="lazy" /></a>
 </figure>
 
-<div class="split split--top">
+<div class="split split--center">
 <div>
 <div class="table-wrap">
 <table>
@@ -92,16 +93,17 @@ client: 'Blue Sky Solar Racing (Gen13)'
 
 ## Maturity and approval
 
+<div class="split split--center">
 <ul>
 <li>Every part and drawing moves through Draft → In Work → Frozen → Released</li>
 <li>Release requires an approver: an automated route creates a review task for them</li>
 <li>Unreleased work can't be referenced from other spaces</li>
 <li>Unapproved drawings can't be sent out for manufacturing</li>
 </ul>
-
-<figure class="fig" style="max-width: 979px">
+<figure class="fig">
 <a href="/images/projects/3dx-plm/maturity-graph.png" target="_blank" rel="noopener"><img src="/images/projects/3dx-plm/maturity-graph.png" alt="Maturity graph: Draft, In Work, Frozen, Released, then Obsolete, with a Released to In Work transition" loading="lazy" /></a>
 </figure>
+</div>
 
 ## Custom attributes
 

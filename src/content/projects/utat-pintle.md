@@ -3,7 +3,7 @@ title: 'Throttleable Pintle Injector'
 summary: 'Designed a throttleable N2O/ethanol pintle injector for a 5 kN bipropellant engine: from hand sketches, to a spreadsheet model, to a custom Python design tool, to detailed CAD.'
 description: "Designed a throttleable pintle injector for UTAT's 5 kN nitrous oxide / ethanol bipropellant engine, taking it from first sketches through flow modelling, a custom design tool, and detailed CAD."
 cover: '../../assets/images/projects/utat-pintle-cover.png'
-coverAlt: 'Placeholder cover image for the pintle injector project'
+coverAlt: 'Section view of the engine with the pintle injector in the injector head, the chamber and the nozzle'
 tech:
   - 'Python'
   - 'Google Sheets'
@@ -16,16 +16,11 @@ client: 'UofT Aerospace Team (Liquid Propulsion)'
 duration: 'From Oct 2025'
 ---
 
-<div class="split split--text">
-<ul class="stats">
+<ul class="stats stats--row">
 <li><b>~3.0 kg/s</b>Total propellant flow at the design point</li>
 <li><b>3</b>Two-phase nitrous flow models implemented (SPI, HEM, Dyer)</li>
-<li><b>3</b>Orifice geometries evaluated</li>
+<li><b>4</b>Orifice geometries evaluated</li>
 </ul>
-<figure class="fig">
-<a href="/images/projects/pintle/full.png" target="_blank" rel="noopener"><img src="/images/projects/pintle/full.png" alt="Cross-section of the engine showing the pintle injector in the injector head, the chamber and the nozzle" /></a>
-</figure>
-</div>
 
 ## Problem
 
@@ -45,12 +40,19 @@ duration: 'From Oct 2025'
 
 ## How I did it
 
-<div class="split split--text">
+<div class="split split--center">
 <div>
 <h3>1. Sketch → spreadsheet → software → CAD</h3>
 <ul>
 <li>Started from hand-drawn concepts</li>
 <li>Moved to a spreadsheet model, then built a custom design tool, then detailed CAD</li>
+</ul>
+<h3>2. Flow and spray modelling</h3>
+<ul>
+<li>Sized the orifices from the engine requirements: thrust, Isp from CEA, O/F 3.5, and chamber and injector pressures</li>
+<li>Implemented three two-phase nitrous oxide mass-flow models (SPI, HEM, Dyer) using NASA CEA data.</li>
+<li>Predicted spray angle from the propellant momentum ratios</li>
+<li>Evaluated four orifice geometries from the literature: circular orifices, two-layer quadrangular slots, slanted slots, and a continuous annular gap</li>
 </ul>
 </div>
 <figure class="fig">
@@ -58,20 +60,11 @@ duration: 'From Oct 2025'
 </figure>
 </div>
 
-<h3>2. Flow and spray modelling</h3>
-
-<ul>
-<li>Sized the orifices from the engine requirements: thrust, Isp from CEA, O/F 3.5, and chamber and injector pressures</li>
-<li>Implemented three two-phase nitrous oxide mass-flow models (SPI, HEM, Dyer) using NASA CEA data.</li>
-<li>Predicted spray angle from the propellant momentum ratios</li>
-<li>Evaluated four orifice geometries from the literature: circular orifices, two-layer quadrangular slots, slanted slots, and a continuous annular gap</li>
-</ul>
-
 <figure class="fig">
 <a href="/images/projects/pintle/spreadsheet.png" target="_blank" rel="noopener"><img src="/images/projects/pintle/spreadsheet.png" alt="Spreadsheet model with imported values, intermediate calculations, mass flow rates, fuel and oxidizer orifice sizing and spray parameters" loading="lazy" /></a>
 </figure>
 
-<div class="split split--media">
+<div class="split split--media split--center">
 <figure class="fig">
 <a href="/images/projects/pintle/app.png" target="_blank" rel="noopener"><img src="/images/projects/pintle/app.png" alt="UTAT Pintle Injector Calculator, step 1 engine specifications with governing equations" loading="lazy" /></a>
 </figure>
@@ -84,18 +77,18 @@ duration: 'From Oct 2025'
 </div>
 </div>
 
+<div class="split split--fill">
+<div>
 <h3>4. Detailed design</h3>
-
 <ul>
 <li>A lead-screw-driven throttle varies the oxidizer and fuel orifice areas together</li>
 <li>O-ring grooves designed with Parker O-Ring Handbook</li>
 </ul>
-
-<div class="split">
 <figure class="fig">
 <a href="/images/projects/pintle/close.png" target="_blank" rel="noopener"><img src="/images/projects/pintle/close.png" alt="Cross-section of the injector head showing the pintle post, oxidizer manifold and O-ring glands" loading="lazy" /></a>
 </figure>
-<figure class="fig">
+</div>
+<figure class="fig fig--fill">
 <a href="/images/projects/pintle/exploded.png" target="_blank" rel="noopener"><img src="/images/projects/pintle/exploded.png" alt="Exploded view of the injector assembly: cover plate, O-rings, pintle stem, manifold body, fittings and pintle sleeve" loading="lazy" /></a>
 </figure>
 </div>

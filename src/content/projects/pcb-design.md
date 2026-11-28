@@ -8,6 +8,7 @@ tech:
   - 'Altium Designer'
   - 'Soldering'
 role: 'TODO: your role on this'
+draft: true
 year: 2026
 ---
 

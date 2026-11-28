@@ -45,23 +45,26 @@ const showFilters = showTechStack && totalPages <= 1 && filters.length > 0;
 const indexOffset = (currentPage - 1) * perPage;
 const rangeStart = projects.length > 0 ? indexOffset + 1 : 0;
 const rangeEnd = indexOffset + projects.length;
+const years = projects.map((p) => p.data.year);
+const yearRange =
+  years.length === 0
+    ? ''
+    : Math.min(...years) === Math.max(...years)
+      ? String(years[0])
+      : `${Math.min(...years)} to ${Math.max(...years)}`;
 ---
 
 <section class="work-hero" aria-labelledby="work-title">
   <Container size="xl">
     <div class="work-hero__index" aria-hidden="true">
-      {String(rangeStart).padStart(2, '0')}—{String(rangeEnd).padStart(2, '0')}
+      {String(rangeStart).padStart(2, '0')} / {String(rangeEnd).padStart(2, '0')}
     </div>
     <div class="work-hero__content">
       <p class="work-hero__eyebrow">
-        Selected case files{showYear && ' / 2022—2026'}
+        Engineering portfolio{showYear && yearRange && ` / ${yearRange}`}
         {totalPages > 1 && ` / Page ${currentPage} of ${totalPages}`}
       </p>
-      <h1 id="work-title">Work shaped around <em>real use.</em></h1>
-      <p class="work-hero__intro">
-        Digital products and identities made legible, useful, and distinctly
-        human. Each case starts with the constraint—not the decoration.
-      </p>
+      <h1 id="work-title">Projects</h1>
     </div>
   </Container>
 </section>
@@ -71,9 +74,9 @@ const rangeEnd = indexOffset + projects.length;
     <div class="project-index__bar">
       <div>
         <p class="project-index__label">
-          Archive / {String(totalProjects).padStart(2, '0')} cases
+          {String(totalProjects).padStart(2, '0')} projects
         </p>
-        <h2 id="project-index-title">Selected projects</h2>
+        <h2 id="project-index-title">All projects</h2>
       </div>
 
       {
@@ -378,9 +381,8 @@ const rangeEnd = indexOffset + projects.length;
     display: none;
   }
 
-  .project-shell--featured {
-    grid-column: 1 / -1;
-  }
+  /* featured cards used to span both columns, which made a full-screen card
+     per project; a plain 2x2 grid reads better with four projects */
 
   .empty-state,
   .filter-empty-state {

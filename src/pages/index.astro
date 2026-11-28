@@ -154,7 +154,7 @@ const contactLinks = [
                     src={project.data.cover}
                     alt={project.data.coverAlt ?? project.data.title}
                     widths={[400, 800, 1200]}
-                    sizes="(min-width: 1000px) 30vw, (min-width: 640px) 45vw, 100vw"
+                    sizes="(min-width: 640px) 48vw, 100vw"
                     loading="lazy"
                   />
                 </div>
@@ -295,9 +295,10 @@ const contactLinks = [
 
   /* ---------- projects ---------- */
 
+  /* 2 across: the four live projects form a 2x2 with no orphan card */
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-xl);
   }
 
@@ -312,6 +313,13 @@ const contactLinks = [
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background: var(--color-surface);
+  }
+
+  /* <picture> is inline by default, so the img's height: 100% had nothing to
+     fill and covers that aren't 16:10 left a band under the image */
+  .pcard__image :global(picture) {
+    display: block;
+    height: 100%;
   }
 
   .pcard__image :global(img) {
@@ -421,12 +429,6 @@ const contactLinks = [
     font-size: var(--text-xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-
-  @media (max-width: 1000px) {
-    .project-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
   }
 
   @media (max-width: 768px) {
