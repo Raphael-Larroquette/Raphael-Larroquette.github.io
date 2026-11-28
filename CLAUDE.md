@@ -137,7 +137,7 @@ ffmpeg -ss 15 -i in.mov -frames:v 1 -vf scale=1280:-2 -q:v 4 out-poster.jpg
 - Colours: viridian accent (`hsl(165, 62%, 55%)` dark, `hsl(165, 65%, 34%)` light) and a blue/green aurora background
 
 - Theme leftovers are hidden, not deleted: `src/pages/_about.astro`, `_blog/`, `_tags/` and `_rss.xml.ts`. The leading underscore stops Astro routing them. Rename to bring one back
-- Open Graph card for the homepage (`/og-image.png`) is still the theme art. Needs a real one
+- Share preview card (`public/og-image.png`, 1200x630) is generated from the headshot: `node scripts/make-og.mjs ../Headshot/headshot.jpg`, then commit. Link previews (Slack, LinkedIn) cache it, so a change can take a while to show
 
 ## Gotchas
 
