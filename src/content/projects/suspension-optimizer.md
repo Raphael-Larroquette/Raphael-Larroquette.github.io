@@ -38,7 +38,7 @@ links:
 ## Problem
 
 <ul>
-<li>Our Tadpole (3 Wheeled Vehicle) behaves entirely distinct to the 4 wheeled vehicles commercial suspension tools assume</li>
+<li>Our tadpole (3-wheeled vehicle) behaves very differently from the 4-wheeled vehicles that commercial suspension tools assume</li>
 <li>A solar car needs to minimize rolling-resistance losses while vehicle design literature focuses on maximising grip</li>
 </ul>
 
@@ -117,7 +117,7 @@ links:
 <ul>
 <li>Implemented NSGA-III to optimize 5 objectives over 21 parameters</li>
 <li>Used integral-based objectives to score each desired characteristic over the whole range of motion, not just the design position</li>
-<li>Created a quasi-static cornering metric that to get near zero road relative camber in turns, for efficiency</li>
+<li>Created a quasi-static cornering metric to get near-zero road-relative camber in turns, for efficiency</li>
 </ul>
 </div>
 <div>

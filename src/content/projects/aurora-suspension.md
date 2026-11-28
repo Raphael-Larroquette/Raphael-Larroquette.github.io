@@ -1,6 +1,6 @@
 ---
 title: 'Suspension & Steering Redesign'
-summary: "Redesigned a Solar Cars front suspension kinematics in CATIA, MATLAB and SUSProg to optimise for lateral stability and on-track performance."
+summary: "Redesigned a solar car's front suspension kinematics in CATIA, MATLAB and SUSProg to optimise for lateral stability and on-track performance."
 description: 'The race car lifted a wheel in the figure-eight and could not pass scrutineering. I traced it to two root causes and redesigned the front end around +60 mm of track width. It passed on the first attempt at race.'
 cover: '../../assets/images/projects/aurora-cover.jpg'
 coverAlt: 'Aurora solar car cornering during figure-eight testing with the inside front wheel lifted off the ground'

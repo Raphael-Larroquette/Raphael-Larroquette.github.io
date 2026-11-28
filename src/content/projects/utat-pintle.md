@@ -31,7 +31,7 @@ duration: 'From Oct 2025'
 
 <ul>
 <li>The previous pintle wasn't throttleable, so it didn't use a pintle's main advantage</li>
-<li>Its flow rates weren't poorly predicted: cold flows had 40% lower than expected flow rates, while a hot-fire had 2× flow rate predicted</li>
+<li>Its flow rates were poorly predicted: cold flows were 40% lower than expected, while the hot-fire suggested up to 2× the predicted flow rate</li>
 <li>Uneven propellant distribution caused the injector to melt at two points</li>
 </ul>
 
