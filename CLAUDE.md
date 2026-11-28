@@ -17,6 +17,14 @@ npm run build     # run before every push; catches schema errors dev lets throug
 npm run preview   # serves the real build output
 ```
 
+### Portfolio PDF
+
+- `src/pages/print.astro` (`/print/`, noindex, not in the sitemap) renders every live project from the same Markdown on A4: cover, contents, one project per new page. Print styles live in that file, not in the site CSS
+- `npm run build:full` = `astro build` + `scripts/build-pdf.mjs`, which prints `/print/` in headless Chromium to `dist/Raphael_Larroquette_Portfolio.pdf` (never committed). The deploy workflow runs `build:full`, so the PDF is always current
+- Videos become their poster image in the PDF; image links point at the live site
+- "Download Portfolio (PDF)" buttons: home hero, home resume block, foot of every project page. Under `npm run dev` the file doesn't exist, so those buttons 404 locally
+- Check it by rasterizing: `python -c "import fitz; [p.get_pixmap(dpi=60).save(f'review/pdf/p{i+1:02d}.png') for i,p in enumerate(fitz.open('dist/Raphael_Larroquette_Portfolio.pdf'))]"`
+
 ### Working version vs live version (option A: local + branch)
 
 - Work on the `dev` branch. `npm run dev` is the working version: it shows drafts and reloads on save

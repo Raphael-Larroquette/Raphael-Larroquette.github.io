@@ -1,5 +1,5 @@
 ---
-import { getProjects } from '@/lib/projects';
+import { getOrderedProjects } from '@/lib/projects';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -13,24 +13,12 @@ import Container from '@/components/ui/Container.astro';
 import GlassCard from '@/components/ui/GlassCard.astro';
 import Picture from '@/components/ui/Picture.astro';
 
-// All projects, not just `featured`. The suspension tool first, then Aurora,
-// then the rest in the order CLAUDE.md lists them.
-const ORDER = [
-  'suspension-optimizer',
-  'aurora-suspension',
-  '3dx-plm',
-  'utat-pintle',
-  'window-fairing',
-  'pcb-design',
-  'buzzer-system',
-];
-const rank = (id: string) => {
-  const i = ORDER.indexOf(id);
-  return i === -1 ? ORDER.length : i;
-};
-const projects = (await getProjects()).sort((a, b) => rank(a.id) - rank(b.id));
+// All projects, not just `featured`, in the order set in src/lib/projects.ts.
+const projects = await getOrderedProjects();
 
 const RESUME = '/resume/Raphael_Larroquette_Resume.pdf';
+// Generated at deploy time by scripts/build-pdf.mjs (not present under npm run dev)
+const PORTFOLIO = '/Raphael_Larroquette_Portfolio.pdf';
 const resumeExists = existsSync(
   join(process.cwd(), 'public', 'resume', 'Raphael_Larroquette_Resume.pdf'),
 );
@@ -113,6 +101,14 @@ const contactLinks = [
               </Button>
             )
           }
+          <Button
+            href={withBase(PORTFOLIO)}
+            variant="outline"
+            size="lg"
+            download="Raphael_Larroquette_Portfolio.pdf"
+          >
+            Download Portfolio (PDF)
+          </Button>
         </div>
       </Container>
     </section>
@@ -184,13 +180,20 @@ const contactLinks = [
                   <span class="resume__icon" set:html={icons.pdf} />
                   <span>Raphael_Larroquette_Resume.pdf</span>
                 </a>
-                <div>
+                <div class="resume__actions">
                   <Button
                     href={withBase(RESUME)}
                     variant="solid"
                     download="Raphael_Larroquette_Resume.pdf"
                   >
                     Download Resume
+                  </Button>
+                  <Button
+                    href={withBase(PORTFOLIO)}
+                    variant="outline"
+                    download="Raphael_Larroquette_Portfolio.pdf"
+                  >
+                    Download Portfolio (PDF)
                   </Button>
                 </div>
               </div>
@@ -368,6 +371,12 @@ const contactLinks = [
     display: grid;
     gap: var(--space-lg);
     justify-items: start;
+  }
+
+  .resume__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
   }
 
   .resume h2,

@@ -155,22 +155,26 @@ const projectLinks = [
             <Content />
           </div>
 
-          {
-            projectLinks.length > 0 && (
-              <div class="case-actions" aria-label="Project links">
-                {projectLinks.map((link, index) => (
-                  <Button
-                    href={link.href}
-                    variant={index === 0 ? 'solid' : 'outline'}
-                    external={link.external}
-                  >
-                    {link.label}
-                    <span aria-hidden="true">↗</span>
-                  </Button>
-                ))}
-              </div>
-            )
-          }
+          <div class="case-actions" aria-label="Project links">
+            {projectLinks.map((link, index) => (
+              <Button
+                href={link.href}
+                variant={index === 0 ? 'solid' : 'outline'}
+                external={link.external}
+              >
+                {link.label}
+                <span aria-hidden="true">↗</span>
+              </Button>
+            ))}
+            {/* generated at deploy time by scripts/build-pdf.mjs */}
+            <Button
+              href={withBase('/Raphael_Larroquette_Portfolio.pdf')}
+              variant="outline"
+              download="Raphael_Larroquette_Portfolio.pdf"
+            >
+              Download Portfolio (PDF)
+            </Button>
+          </div>
         </div>
 
         <nav class="case-next" aria-label="Portfolio navigation">

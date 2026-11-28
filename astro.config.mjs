@@ -73,6 +73,8 @@ export default defineConfig({
     ...(siteConfig.features.sitemap
       ? [
           sitemap({
+            // /print/ only exists to be turned into the portfolio PDF
+            filter: (page) => !page.includes('/print/'),
             serialize(item) {
               const lastmod = LASTMOD.get(new URL(item.url).pathname);
               return lastmod ? { ...item, lastmod } : item;

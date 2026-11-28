@@ -24,12 +24,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      # withastro/action installs deps, runs `astro build`, and uploads the
-      # Pages artifact. site/base come from astro.config.mjs.
-      - name: Build
-        uses: withastro/action@v6
+      # Explicit steps instead of withastro/action, because the build also
+      # needs headless Chromium to print the portfolio PDF.
+      - name: Set up Node
+        uses: actions/setup-node@v7
         with:
           node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium for the PDF
+        run: npx playwright install --with-deps chromium
+      # astro build, then scripts/build-pdf.mjs writes
+      # dist/Raphael_Larroquette_Portfolio.pdf
+      - name: Build site and PDF
+        run: npm run build:full
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
 
   deploy:
     needs: build

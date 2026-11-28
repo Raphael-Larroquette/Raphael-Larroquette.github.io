@@ -7,6 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "pdf": "node scripts/build-pdf.mjs",
+    "build:full": "astro build && npm run pdf",
     "check": "astro check && tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",

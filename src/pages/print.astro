@@ -1,0 +1,668 @@
+---
+// Print version of the whole portfolio, turned into an A4 PDF by
+// scripts/build-pdf.mjs at deploy time. Not in the nav, not indexed.
+// Content comes from the same Markdown as the project pages, so the PDF
+// never drifts from the site.
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import { getOrderedProjects } from '@/lib/projects';
+import siteConfig from '@/site.config';
+
+const projects = await getOrderedProjects();
+const rendered = await Promise.all(
+  projects.map(async (project) => ({ project, ...(await render(project)) })),
+);
+
+const EMAIL = 'r.larroquette@mail.utoronto.ca';
+const strip = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '');
+const month = new Date().toLocaleDateString('en-CA', {
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{siteConfig.name}, Engineering Portfolio</title>
+  </head>
+  <body data-site={siteConfig.url.replace(/\/$/, '')}>
+    <section class="cover">
+      <div>
+        <p class="cover__kicker">Engineering Portfolio</p>
+        <h1>{siteConfig.name}</h1>
+        <p class="cover__line">
+          Mechanical engineering student at the University of Toronto.
+          Available for internships starting May 2027.
+        </p>
+      </div>
+      <dl class="cover__contact">
+        <div><dt>Email</dt><dd>{EMAIL}</dd></div>
+        {
+          siteConfig.social.linkedin && (
+            <div>
+              <dt>LinkedIn</dt>
+              <dd>{strip(siteConfig.social.linkedin)}</dd>
+            </div>
+          )
+        }
+        {
+          siteConfig.social.github && (
+            <div>
+              <dt>GitHub</dt>
+              <dd>{strip(siteConfig.social.github)}</dd>
+            </div>
+          )
+        }
+        <div><dt>Website</dt><dd>{strip(siteConfig.url)}</dd></div>
+      </dl>
+      <p class="cover__date">{month}</p>
+    </section>
+
+    <section class="contents">
+      <h2>Contents</h2>
+      <ol>
+        {
+          projects.map((p) => (
+            <li>
+              <a href={`#${p.id}`}>{p.data.title}</a>
+              <span>{p.data.summary}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    {
+      rendered.map(({ project, Content }) => (
+        <article class="project" id={project.id}>
+          <header>
+            <h2 class="project__title">{project.data.title}</h2>
+            <p class="project__summary">{project.data.summary}</p>
+            <dl class="facts">
+              {project.data.client && (
+                <div><dt>Team</dt><dd>{project.data.client}</dd></div>
+              )}
+              {project.data.role && (
+                <div><dt>Role</dt><dd>{project.data.role}</dd></div>
+              )}
+              {project.data.duration ? (
+                <div><dt>Duration</dt><dd>{project.data.duration}</dd></div>
+              ) : (
+                <div><dt>Year</dt><dd>{project.data.year}</dd></div>
+              )}
+              <div class="facts__wide">
+                <dt>Tools</dt>
+                <dd>{project.data.tech.join(', ')}</dd>
+              </div>
+              {project.data.links?.github && (
+                <div class="facts__wide">
+                  <dt>Source</dt>
+                  <dd>{strip(project.data.links.github)}</dd>
+                </div>
+              )}
+            </dl>
+          </header>
+          {project.data.showCover !== false && (
+            <figure class="project__cover">
+              <Image
+                src={project.data.cover}
+                alt={project.data.coverAlt ?? project.data.title}
+                width={1400}
+                format="jpg"
+                quality={80}
+              />
+            </figure>
+          )}
+          {project.data.description && (
+            <p class="lead">{project.data.description}</p>
+          )}
+          <div class="prose">
+            <Content />
+          </div>
+        </article>
+      ))
+    }
+
+    <script is:inline>
+      // Markup swaps for print, done before build-pdf.mjs prints the page:
+      // videos become their poster image (Chromium does not reliably print
+      // posters), lazy images load now, and links become plain text.
+      document.querySelectorAll('.prose video').forEach((v) => {
+        const fig = document.createElement('figure');
+        fig.className = 'fig fig--video';
+        if (v.poster) {
+          const img = document.createElement('img');
+          img.src = v.poster;
+          img.alt = v.getAttribute('aria-label') || 'Video still';
+          fig.appendChild(img);
+        }
+        const cap = document.createElement('figcaption');
+        cap.textContent = 'Video on the website';
+        fig.appendChild(cap);
+        const outer = v.closest('figure');
+        const keep = outer && outer.querySelector('figcaption');
+        if (keep) cap.textContent = keep.textContent.trim() + ' (video on the website)';
+        (outer || v).replaceWith(fig);
+      });
+      document.querySelectorAll('img[loading="lazy"]').forEach((i) => (i.loading = 'eager'));
+      // image links stay clickable, but point at the live site, not the
+      // local server the PDF was printed from
+      const SITE = document.body.dataset.site;
+      document.querySelectorAll('.prose a').forEach((a) => {
+        if (a.querySelector('img')) {
+          const href = a.getAttribute('href');
+          if (href && href.startsWith('/')) a.setAttribute('href', SITE + href);
+          return;
+        }
+        a.replaceWith(...a.childNodes);
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @page {
+    size: A4;
+    margin: 16mm 15mm 18mm;
+  }
+
+  :root {
+    --ink: #14181c;
+    --muted: #55606a;
+    --line: #d6dde2;
+    --soft: #f2f6f5;
+    --accent: hsl(165, 65%, 26%);
+    color-scheme: light;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: #fff;
+  }
+
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family:
+      system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+      sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  /* ---------- cover ---------- */
+
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 255mm;
+    padding: 30mm 0 0;
+    break-after: page;
+    border-top: 3mm solid var(--accent);
+  }
+
+  .cover__kicker {
+    margin: 0 0 4mm;
+    color: var(--accent);
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .cover h1 {
+    margin: 0;
+    font-size: 40pt;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .cover__line {
+    max-width: 120mm;
+    margin: 8mm 0 0;
+    color: var(--muted);
+    font-size: 13pt;
+  }
+
+  .cover__contact {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5mm 10mm;
+    margin: 0;
+  }
+
+  .cover__contact dt,
+  .facts dt {
+    color: var(--muted);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cover__contact dd,
+  .facts dd {
+    margin: 0;
+  }
+
+  .cover__date {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  /* ---------- contents ---------- */
+
+  .contents {
+    break-after: page;
+  }
+
+  .contents h2 {
+    margin: 0 0 8mm;
+    font-size: 20pt;
+  }
+
+  .contents ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: c;
+  }
+
+  .contents li {
+    display: grid;
+    grid-template-columns: 10mm 1fr;
+    column-gap: 2mm;
+    padding: 4mm 0;
+    border-top: 0.3mm solid var(--line);
+    counter-increment: c;
+  }
+
+  .contents li::before {
+    content: counter(c, decimal-leading-zero);
+    grid-row: span 2;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .contents li a {
+    font-size: 12.5pt;
+    font-weight: 700;
+  }
+
+  .contents li span {
+    color: var(--muted);
+  }
+
+  /* ---------- project ---------- */
+
+  .project {
+    break-before: page;
+  }
+
+  .project__title {
+    margin: 0;
+    font-size: 20pt;
+    line-height: 1.15;
+  }
+
+  .project__summary {
+    margin: 2mm 0 4mm;
+    color: var(--muted);
+    font-size: 11pt;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3mm 6mm;
+    margin: 0 0 5mm;
+    padding: 3.5mm 4mm;
+    border: 0.3mm solid var(--line);
+    border-radius: 2mm;
+    background: var(--soft);
+  }
+
+  .facts__wide {
+    grid-column: 1 / -1;
+  }
+
+  .project__cover {
+    margin: 0 0 5mm;
+  }
+
+  .project__cover img {
+    display: block;
+    width: 100%;
+    max-height: 95mm;
+    object-fit: cover;
+    border-radius: 2mm;
+  }
+
+  .lead {
+    margin: 0 0 4mm;
+    padding-left: 3.5mm;
+    border-left: 1mm solid var(--accent);
+    font-size: 11pt;
+  }
+
+  /* ---------- project content: the same layout blocks as the site ---------- */
+
+  .prose h2 {
+    margin: 6mm 0 2.5mm;
+    font-size: 14pt;
+    break-after: avoid;
+  }
+
+  .prose h3 {
+    margin: 4mm 0 1.5mm;
+    font-size: 11.5pt;
+    break-after: avoid;
+  }
+
+  .prose > :first-child,
+  .prose div > :first-child {
+    margin-top: 0;
+  }
+
+  .prose p {
+    margin: 0 0 2.5mm;
+  }
+
+  .prose ul {
+    margin: 0 0 2.5mm;
+    padding-left: 5mm;
+  }
+
+  .prose li {
+    margin: 0 0 1mm;
+  }
+
+  .prose li::marker {
+    color: var(--accent);
+  }
+
+  .prose strong {
+    font-weight: 700;
+  }
+
+  .prose code {
+    font-size: 9pt;
+  }
+
+  .view-source-row,
+  .tag-wip {
+    display: none;
+  }
+
+  .fig {
+    margin: 0;
+    min-width: 0;
+    break-inside: avoid;
+  }
+
+  .fig img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 95mm;
+    object-fit: contain;
+    border: 0.3mm solid var(--line);
+    border-radius: 1.5mm;
+  }
+
+  .fig a {
+    display: block;
+  }
+
+  .prose > .fig {
+    margin: 3mm 0 4mm;
+  }
+
+  figcaption {
+    margin-top: 1.5mm;
+    color: var(--muted);
+    font-size: 8.5pt;
+  }
+
+  .logo-panel {
+    padding: 4mm;
+    border-radius: 1.5mm;
+    background: #f3f1ea;
+  }
+
+  .logo-panel img {
+    border: 0;
+    max-height: 25mm;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 6mm;
+    align-items: start;
+    margin: 3mm 0 4mm;
+    break-inside: avoid;
+  }
+
+  .split--text {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  }
+
+  .split--media {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .split--center {
+    align-items: center;
+  }
+
+  .split--fill {
+    align-items: stretch;
+  }
+
+  .fig--fill {
+    position: relative;
+  }
+
+  .fig--fill a {
+    position: absolute;
+    inset: 0;
+  }
+
+  .fig--fill img {
+    height: 100%;
+    max-height: none;
+  }
+
+  .split > div > .fig {
+    margin-top: 3mm;
+  }
+
+  .grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4mm;
+    align-items: start;
+    margin: 3mm 0 4mm;
+    break-inside: avoid;
+  }
+
+  .grid3--frames .fig img {
+    aspect-ratio: 4 / 3;
+    padding: 1.5mm;
+    background: #fff;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(4, auto);
+    column-gap: 4mm;
+    row-gap: 2mm;
+    margin: 3mm 0 4mm;
+    break-inside: avoid;
+  }
+
+  .compare__col {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+  }
+
+  .compare__col ul,
+  .compare__sim {
+    margin: 0;
+    font-size: 9.5pt;
+  }
+
+  .compare__name {
+    margin: 0 0 1mm;
+    font-weight: 700;
+  }
+
+  .compare__name[data-badge]::after {
+    content: attr(data-badge);
+    margin-left: 2mm;
+    padding: 0.3mm 1.5mm;
+    border-radius: 1mm;
+    background: var(--accent);
+    color: #fff;
+    font-size: 6.5pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 0.2em;
+  }
+
+  .compare__col--chosen .fig img {
+    border: 0.6mm solid var(--accent);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3mm;
+    margin: 3mm 0 4mm;
+  }
+
+  .cards > div {
+    padding: 3mm 4mm;
+    border: 0.3mm solid var(--line);
+    border-radius: 2mm;
+    break-inside: avoid;
+  }
+
+  .cards p,
+  .cards ul {
+    margin: 0;
+  }
+
+  .cards__title {
+    margin-bottom: 1mm !important;
+    font-weight: 700;
+  }
+
+  .decision {
+    margin: 3mm 0 4mm;
+    padding: 3mm 4mm;
+    border-left: 1mm solid var(--accent);
+    border-radius: 0 2mm 2mm 0;
+    background: var(--soft);
+    break-inside: avoid;
+  }
+
+  .decision ul,
+  .decision p:last-child {
+    margin-bottom: 0;
+  }
+
+  .stats {
+    display: grid;
+    gap: 3mm;
+    margin: 0 0 4mm;
+    padding: 0 !important;
+    list-style: none;
+    break-inside: avoid;
+  }
+
+  .stats--row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .stats li {
+    margin: 0;
+    padding-left: 3mm;
+    border-left: 0.6mm solid var(--accent);
+    color: var(--muted);
+    font-size: 9pt;
+  }
+
+  .stats li::marker {
+    content: '';
+  }
+
+  .stats b {
+    display: block;
+    color: var(--ink);
+    font-size: 14pt;
+  }
+
+  .eyebrow {
+    margin: 0 0 1mm;
+    color: var(--accent);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .table-wrap {
+    break-inside: avoid;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+  }
+
+  th,
+  td {
+    padding: 1.2mm 2mm;
+    border: 0.3mm solid var(--line);
+    text-align: left;
+  }
+
+  th {
+    background: var(--soft);
+  }
+
+  .attrib {
+    color: var(--muted);
+    font-size: 8.5pt;
+  }
+
+  video {
+    display: none;
+  }
+</style>

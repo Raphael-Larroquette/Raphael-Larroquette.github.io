@@ -15,3 +15,24 @@ export const SHOW_DRAFTS =
 export async function getProjects() {
   return getCollection('projects', ({ data }) => SHOW_DRAFTS || !data.draft);
 }
+
+// Display order on the home page and in the portfolio PDF. The suspension
+// tool first, then Aurora, then the rest; anything unlisted goes last.
+const ORDER = [
+  'suspension-optimizer',
+  'aurora-suspension',
+  '3dx-plm',
+  'utat-pintle',
+  'window-fairing',
+  'pcb-design',
+  'buzzer-system',
+];
+
+const rank = (id: string) => {
+  const i = ORDER.indexOf(id);
+  return i === -1 ? ORDER.length : i;
+};
+
+export async function getOrderedProjects() {
+  return (await getProjects()).sort((a, b) => rank(a.id) - rank(b.id));
+}
